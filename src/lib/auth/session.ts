@@ -1,5 +1,4 @@
 import { getIronSession, SessionOptions, IronSession } from "iron-session";
-import { cookies } from "next/headers";
 
 export interface SessionData {
   user_id: string;
@@ -28,6 +27,7 @@ export const sessionOptions: SessionOptions = {
 };
 
 export async function getSession(): Promise<IronSession<SessionData>> {
+  const { cookies } = await import("next/headers");
   const cookieStore = await cookies();
   const session = await getIronSession<SessionData>(cookieStore, sessionOptions);
 
@@ -39,6 +39,7 @@ export async function getSession(): Promise<IronSession<SessionData>> {
 }
 
 export async function destroySession(): Promise<void> {
+  const { cookies } = await import("next/headers");
   const cookieStore = await cookies();
   const session = await getIronSession<SessionData>(cookieStore, sessionOptions);
   session.destroy();

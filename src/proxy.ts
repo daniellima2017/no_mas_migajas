@@ -2,13 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getIronSession } from "iron-session";
 import { createClient } from "@supabase/supabase-js";
-
-interface SessionData {
-  user_id: string;
-  email: string;
-  onboarding_completed: boolean;
-  subscription_status: "active" | "inactive";
-}
+import { SessionData, sessionOptions } from "@/lib/auth/session";
 
 interface RateLimitEntry {
   count: number;
@@ -63,18 +57,6 @@ export async function proxy(request: NextRequest) {
   if (publicApiPaths.some((path) => pathname.startsWith(path))) {
     return NextResponse.next();
   }
-
-  const sessionOptions = {
-    password: process.env.IRON_SESSION_PASSWORD!,
-    cookieName: "nmm_session",
-    cookieOptions: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax" as const,
-      maxAge: 60 * 60 * 24 * 30,
-      path: "/",
-    },
-  };
 
   const response = NextResponse.next();
   const session = await getIronSession<SessionData>(request, response, sessionOptions);
