@@ -73,10 +73,9 @@ export async function POST(request: NextRequest) {
     await session.save();
 
     return response;
-  } catch (error) {
-    console.error("Login error:", error);
+  } catch {
     return NextResponse.json(
-      { error: "Error interno del servidor", debug: String(error) },
+      { error: "Error interno del servidor" },
       { status: 500 }
     );
   }
