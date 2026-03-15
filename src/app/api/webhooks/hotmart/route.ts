@@ -26,19 +26,12 @@ export async function POST(request: Request) {
   try {
     const payload: HotmartPayload = await request.json();
 
-    // Debug: log payload keys and headers to find where hottok comes from
-    console.log("Webhook received - payload keys:", Object.keys(payload));
-    console.log("Webhook received - hottok in body:", payload.hottok ? "present" : "missing");
-    console.log("Webhook received - x-hottok header:", request.headers.get("x-hottok") ? "present" : "missing");
-    console.log("Webhook received - x-hotmart-hottok header:", request.headers.get("x-hotmart-hottok") ? "present" : "missing");
-
-    // Try multiple locations where Hotmart might send the hottok
+    // Hotmart sends hottok in body (fallback to headers)
     const hottok = payload.hottok
       || request.headers.get("x-hottok")
       || request.headers.get("x-hotmart-hottok");
 
     if (!verifyHotmartToken(hottok)) {
-      console.error("Webhook auth failed - hottok value:", hottok, "expected:", process.env.HOTMART_HOTTOK ? "configured" : "NOT configured");
       return NextResponse.json(
         { error: "Token invalido" },
         { status: 401 }
@@ -93,8 +86,47 @@ export async function POST(request: Request) {
       });
 
       if (authError) {
+        // If user already exists, reactivate and send new credentials
+        if (authError.message?.includes("already") || authError.status === 422) {
+          console.log("Usuario ya existe, reactivando:", buyerEmail);
+
+          // Update password for existing auth user
+          const { data: users } = await supabase.auth.admin.listUsers();
+          const existingUser = users?.users?.find(u => u.email === buyerEmail);
+
+          if (existingUser) {
+            await supabase.auth.admin.updateUserById(existingUser.id, {
+              password: tempPassword,
+            });
+
+            // Reactivate subscription
+            await supabase
+              .from("users")
+              .update({ subscription_status: "active" })
+              .eq("id", existingUser.id);
+
+            await sendWelcomeEmail({
+              email: buyerEmail,
+              name: buyerName || null,
+              password: tempPassword,
+            });
+          }
+
+          await supabase.from("webhook_events").insert({
+            event_id: eventId,
+            event_type: eventType,
+            payload: payload,
+            processed_at: new Date().toISOString(),
+          });
+
+          return NextResponse.json(
+            { message: "Usuario reactivado exitosamente" },
+            { status: 200 }
+          );
+        }
+
         console.error("Error creando usuario:", authError);
-        
+
         await supabase.from("webhook_events").insert({
           event_id: eventId,
           event_type: eventType,
@@ -138,10 +170,9 @@ export async function POST(request: Request) {
       });
 
       return NextResponse.json(
-        { 
+        {
           message: "Usuario creado exitosamente",
           user_id: authData.user?.id,
-          temp_password: tempPassword,
         },
         { status: 200 }
       );
