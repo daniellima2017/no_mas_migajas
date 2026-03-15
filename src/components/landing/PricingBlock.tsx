@@ -22,6 +22,7 @@ export function PricingBlock() {
 
   return (
     <motion.section
+      id="pricing"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -94,7 +95,7 @@ export function PricingBlock() {
               border: "1px solid rgba(212, 175, 55, 0.6)",
             }}
           >
-            Activar mi Detector de Migajas — $17
+            Activar mi Detector de Migajas
           </motion.button>
         </a>
 

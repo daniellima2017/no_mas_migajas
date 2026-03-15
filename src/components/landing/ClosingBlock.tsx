@@ -3,8 +3,6 @@
 import { motion } from "framer-motion";
 import { AlertTriangle } from "lucide-react";
 
-const CTA_URL = "#"; // Replace with Hotmart checkout URL
-
 export function ClosingBlock() {
   return (
     <motion.section
@@ -72,21 +70,20 @@ export function ClosingBlock() {
         </div>
       </div>
 
-      <a href={CTA_URL} className="block">
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="w-full py-4 rounded-xl font-[var(--font-michroma)] text-sm md:text-base font-bold uppercase tracking-wider text-black"
-          style={{
-            background: "linear-gradient(135deg, #D4AF37 0%, #c9a227 50%, #B8941F 100%)",
-            boxShadow:
-              "0 4px 20px rgba(212, 175, 55, 0.4), 0 0 60px rgba(212, 175, 55, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.25)",
-            border: "1px solid rgba(212, 175, 55, 0.6)",
-          }}
-        >
-          Activar mi Racha de Dignidad — $17
-        </motion.button>
-      </a>
+      <motion.button
+        onClick={() => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" })}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="w-full py-4 rounded-xl font-[var(--font-michroma)] text-sm md:text-base font-bold uppercase tracking-wider text-black cursor-pointer"
+        style={{
+          background: "linear-gradient(135deg, #D4AF37 0%, #c9a227 50%, #B8941F 100%)",
+          boxShadow:
+            "0 4px 20px rgba(212, 175, 55, 0.4), 0 0 60px rgba(212, 175, 55, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.25)",
+          border: "1px solid rgba(212, 175, 55, 0.6)",
+        }}
+      >
+        Activar mi Racha de Dignidad
+      </motion.button>
 
       {/* Footer */}
       <div className="mt-16 pt-8" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
