@@ -151,9 +151,8 @@ export function DashboardClient() {
         <motion.header
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center pt-6 flex flex-col items-center"
+          className="text-center pt-6"
         >
-          <img src="/logo.gif" alt="No Mas Migajas" className="w-36 h-auto mb-4" />
           <LevelBadge streakSeconds={streakSeconds} />
         </motion.header>
 
