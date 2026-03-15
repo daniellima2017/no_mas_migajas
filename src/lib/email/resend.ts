@@ -29,9 +29,9 @@ export async function sendPasswordResetEmail({ email, password }: SendPasswordRe
   }
 
   const appName = "No Mas Migajas";
-  const loginUrl = process.env.NEXT_PUBLIC_APP_URL
-    ? `${process.env.NEXT_PUBLIC_APP_URL}/login`
-    : "http://localhost:3333/login";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3333";
+  const loginUrl = `${baseUrl}/login`;
+  const logoUrl = `${baseUrl}/logo_lp.png`;
 
   const html = `
     <!DOCTYPE html>
@@ -48,7 +48,7 @@ export async function sendPasswordResetEmail({ email, password }: SendPasswordRe
             <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #09090b; border-radius: 12px; border: 1px solid #27272a;">
               <tr>
                 <td style="padding: 40px 40px 20px 40px; text-align: center;">
-                  <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">${appName}</h1>
+                  <img src="${logoUrl}" alt="${appName}" width="180" style="display: inline-block; max-width: 180px; height: auto;" />
                   <p style="margin: 10px 0 0 0; color: #a1a1aa; font-size: 14px;">Recuperacion de contrasena</p>
                 </td>
               </tr>
@@ -124,10 +124,10 @@ export async function sendWelcomeEmail({ email, name, password }: SendWelcomeEma
   }
   
   const appName = "No Mas Migajas";
-  const loginUrl = process.env.NEXT_PUBLIC_APP_URL 
-    ? `${process.env.NEXT_PUBLIC_APP_URL}/login`
-    : "http://localhost:3333/login";
-  
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3333";
+  const loginUrl = `${baseUrl}/login`;
+  const logoUrl = `${baseUrl}/logo_lp.png`;
+
   const greeting = name ? `Hola, ${name}` : "Hola";
 
   const html = `
@@ -145,7 +145,7 @@ export async function sendWelcomeEmail({ email, name, password }: SendWelcomeEma
             <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #09090b; border-radius: 12px; border: 1px solid #27272a;">
               <tr>
                 <td style="padding: 40px 40px 20px 40px; text-align: center;">
-                  <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">${appName}</h1>
+                  <img src="${logoUrl}" alt="${appName}" width="180" style="display: inline-block; max-width: 180px; height: auto;" />
                   <p style="margin: 10px 0 0 0; color: #a1a1aa; font-size: 14px;">Tu camino hacia la dignidad comienza aqui</p>
                 </td>
               </tr>
