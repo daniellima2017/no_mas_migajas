@@ -11,6 +11,8 @@ import { ScoreCard } from "@/components/dashboard/ScoreCard";
 import { NextMedalCard } from "@/components/dashboard/NextMedalCard";
 import { ReinforcementFeed } from "@/components/dashboard/ReinforcementFeed";
 import { ResetModal } from "@/components/streak/ResetModal";
+import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
+import { Flame, BarChart3, MessageSquare, Trophy } from "lucide-react";
 import type { Streak, Medal, Relapse, TriggerPatterns, QuizResult } from "@/types";
 
 interface DashboardData {
@@ -306,6 +308,32 @@ export function DashboardClient() {
           onSubmit={handleResetSubmit}
         />
       )}
+
+      <OnboardingTour
+        tourKey="dashboard"
+        steps={[
+          {
+            icon: <Flame className="w-7 h-7 text-accent-gold" />,
+            title: "Tu Racha de Dignidad",
+            description: "Este contador mide cuanto tiempo llevas sin buscar migajas de atencion. Cada segundo suma. Cada recaida lo reinicia.",
+          },
+          {
+            icon: <BarChart3 className="w-7 h-7 text-accent-gold" />,
+            title: "Tu Puntuacion",
+            description: "Tu score refleja tu nivel de dependencia emocional. Rehaz el cuestionario cada 24 horas para ver tu progreso real.",
+          },
+          {
+            icon: <Trophy className="w-7 h-7 text-accent-gold" />,
+            title: "Medallas y Niveles",
+            description: "Desbloquea medallas al mantener tu racha. Cada nivel demuestra que estas recuperando tu poder.",
+          },
+          {
+            icon: <MessageSquare className="w-7 h-7 text-accent-gold" />,
+            title: "Simulador Hielo Seco",
+            description: "Usa el boton rojo del menu para analizar mensajes. Te traduce lo que el REALMENTE quiere decir.",
+          },
+        ]}
+      />
 
       {toastError && (
         <motion.div

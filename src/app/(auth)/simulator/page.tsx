@@ -7,8 +7,9 @@ import { SimulatorOutput } from "@/components/simulator/SimulatorOutput";
 import { PanicButton } from "@/components/simulator/PanicButton";
 import { EmotionalBrake } from "@/components/streak/EmotionalBrake";
 import { useSimulator } from "@/hooks/useSimulator";
-import { AlertTriangle, History } from "lucide-react";
+import { AlertTriangle, History, ArrowDownLeft, Send, Zap } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
 
 export default function SimulatorPage() {
   const {
@@ -158,6 +159,27 @@ export default function SimulatorPage() {
           </div>
         </div>
       </div>
+
+      <OnboardingTour
+        tourKey="simulator"
+        steps={[
+          {
+            icon: <ArrowDownLeft className="w-7 h-7 text-red-400" />,
+            title: "Que te dijo?",
+            description: "Pega el mensaje que recibiste de el. Hielo Seco te traduce lo que REALMENTE quiso decir y expone su tactica.",
+          },
+          {
+            icon: <Send className="w-7 h-7 text-accent-gold" />,
+            title: "Que quieres mandarle?",
+            description: "Escribe lo que quieres enviarle ANTES de hacerlo. Hielo Seco te frena y te muestra lo que va a pasar si lo envias.",
+          },
+          {
+            icon: <Zap className="w-7 h-7 text-red-400" />,
+            title: "Boton de Panico",
+            description: "Si sientes urgencia extrema de escribirle, presiona el boton rojo. Activa un freno emocional que te da tiempo para pensar.",
+          },
+        ]}
+      />
 
       {showBrake && (
         <EmotionalBrake
