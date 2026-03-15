@@ -6,6 +6,7 @@ import { sendWelcomeEmail } from "@/lib/email/resend";
 interface HotmartPayload {
   id?: string;
   event?: string;
+  hottok?: string;
   data?: {
     buyer?: {
       email?: string;
@@ -23,7 +24,10 @@ interface HotmartPayload {
 
 export async function POST(request: Request) {
   try {
-    const hottok = request.headers.get("x-hottok");
+    const payload: HotmartPayload = await request.json();
+
+    // Hotmart sends hottok in the request body (fallback to header)
+    const hottok = payload.hottok || request.headers.get("x-hottok");
 
     if (!verifyHotmartToken(hottok)) {
       return NextResponse.json(
@@ -31,8 +35,6 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
-
-    const payload: HotmartPayload = await request.json();
     const eventId = payload.id;
 
     if (!eventId) {
