@@ -227,18 +227,19 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6">
-      {/* Question header with glass card highlight */}
+      {/* Question header */}
       <div
         className="text-center space-y-3 p-6 rounded-2xl"
         style={{
-          background: "linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)",
-          border: "1px solid rgba(212, 175, 55, 0.15)",
+          background: "linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.04) 100%)",
+          border: "1px solid rgba(212, 175, 55, 0.3)",
+          boxShadow: "0 0 30px rgba(212, 175, 55, 0.08), inset 0 1px 0 rgba(212, 175, 55, 0.1)",
         }}
       >
         <motion.p
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-accent-gold/70 text-xs uppercase tracking-[0.2em] font-semibold"
+          className="text-accent-gold text-xs uppercase tracking-[0.2em] font-bold"
         >
           {question.context}
         </motion.p>
@@ -246,9 +247,9 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-xl md:text-2xl font-bold text-white leading-snug"
+          className="text-2xl md:text-[1.7rem] font-bold text-white leading-snug"
           style={{
-            textShadow: "0 0 30px rgba(255, 255, 255, 0.1)",
+            textShadow: "0 0 40px rgba(212, 175, 55, 0.15)",
           }}
         >
           {question.title}
@@ -285,24 +286,26 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
                   style={{
                     background: isSelected
                       ? selectedStyles!.bg
-                      : "linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%)",
+                      : "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)",
                     border: isSelected
                       ? `1px solid ${selectedStyles!.border}`
-                      : "1px solid rgba(255, 255, 255, 0.1)",
-                    boxShadow: isSelected ? selectedStyles!.glow : "none",
+                      : "1px solid rgba(255, 255, 255, 0.15)",
+                    boxShadow: isSelected ? selectedStyles!.glow : "0 2px 8px rgba(0, 0, 0, 0.3)",
                     backdropFilter: "blur(10px)",
                   }}
                   onClick={() => handleSelect(option.id)}
                   onMouseEnter={(e) => {
                     if (!selectedId) {
-                      e.currentTarget.style.borderColor = "rgba(212, 175, 55, 0.3)";
-                      e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.03) 100%)";
+                      e.currentTarget.style.borderColor = "rgba(212, 175, 55, 0.4)";
+                      e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)";
+                      e.currentTarget.style.boxShadow = "0 4px 16px rgba(212, 175, 55, 0.1)";
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!selectedId) {
-                      e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
-                      e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%)";
+                      e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)";
+                      e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)";
+                      e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.3)";
                     }
                   }}
                 >
@@ -317,14 +320,14 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
                         style={{
                           background: isSelected
                             ? "rgba(255, 255, 255, 0.15)"
-                            : "rgba(255, 255, 255, 0.06)",
-                          border: "1px solid rgba(255, 255, 255, 0.08)",
+                            : "rgba(212, 175, 55, 0.1)",
+                          border: "1px solid rgba(212, 175, 55, 0.2)",
                         }}
                       >
                         <DynamicIcon name={option.icon} />
                       </div>
                     </motion.div>
-                    <p className="text-zinc-100 text-sm md:text-base flex-1 font-medium leading-relaxed">
+                    <p className="text-white text-sm md:text-base flex-1 font-semibold leading-relaxed">
                       {option.text}
                     </p>
                   </div>
