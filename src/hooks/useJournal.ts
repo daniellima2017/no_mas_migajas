@@ -146,7 +146,6 @@ export function useJournal(): UseJournalReturn {
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
-        setError("Usuario no autenticado");
         setIsLoadingHistory(false);
         return;
       }
