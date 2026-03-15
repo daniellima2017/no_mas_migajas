@@ -3,7 +3,6 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { ArrowRight, Loader2, WifiOff, ArrowDownLeft, Send } from "lucide-react";
 import { useOnlineContext } from "@/components/pwa/OnlineStatusProvider";
 
@@ -174,23 +173,23 @@ export function SimulatorInput({ onSubmit, isLoading }: SimulatorInputProps) {
         )}
       </AnimatePresence>
 
-      <Button
+      <button
         onClick={handleSubmit}
         disabled={!text.trim() || isLoading}
-        className="w-full bg-white text-black hover:bg-zinc-200 font-semibold py-3"
+        className="btn-premium w-full py-3.5 text-sm flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
       >
         {isLoading ? (
           <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" />
             Procesando...
           </>
         ) : (
           <>
             PROCESAR
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <ArrowRight className="h-4 w-4" />
           </>
         )}
-      </Button>
+      </button>
     </div>
   );
 }

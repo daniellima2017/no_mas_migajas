@@ -214,27 +214,36 @@
 
 /* === PREMIUM BUTTON === */
 .btn-premium {
-  background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+  background: linear-gradient(135deg, #D4AF37 0%, #C49B2A 50%, #B8941F 100%);
   color: #0a0a0f;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   border-radius: 0.75rem;
+  border: 1px solid rgba(212, 175, 55, 0.6);
   transition: all 0.3s ease;
+  position: relative;
   box-shadow:
-    0 2px 12px rgba(212, 175, 55, 0.25),
-    0 0 20px rgba(185, 28, 28, 0.08);
+    0 4px 16px rgba(212, 175, 55, 0.35),
+    0 0 40px rgba(212, 175, 55, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .btn-premium:hover {
-  background: linear-gradient(135deg, #E0C04A 0%, #D4AF37 100%);
+  background: linear-gradient(135deg, #E0C04A 0%, #D4AF37 50%, #C49B2A 100%);
+  border-color: rgba(212, 175, 55, 0.8);
   box-shadow:
-    0 4px 24px rgba(212, 175, 55, 0.35),
-    0 0 30px rgba(185, 28, 28, 0.12);
-  transform: translateY(-1px);
+    0 6px 28px rgba(212, 175, 55, 0.45),
+    0 0 60px rgba(212, 175, 55, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 .btn-premium:active {
   transform: translateY(0);
+  box-shadow:
+    0 2px 8px rgba(212, 175, 55, 0.3),
+    0 0 20px rgba(212, 175, 55, 0.1);
 }
 
 /* === PANIC BUTTON === */

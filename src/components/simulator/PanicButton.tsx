@@ -18,11 +18,13 @@ export function PanicButton({ onClick }: PanicButtonProps) {
       onMouseLeave={() => setIsHovered(false)}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      className="relative w-full py-4 rounded-lg bg-red-600 text-white font-bold uppercase tracking-wider transition-all duration-200 hover:bg-red-700"
+      className="relative w-full py-4 rounded-xl text-white font-bold uppercase tracking-widest transition-all duration-200"
       style={{
+        background: "linear-gradient(135deg, #DC2626 0%, #B91C1C 50%, #7F1D1D 100%)",
+        border: "1px solid rgba(239, 68, 68, 0.5)",
         boxShadow: isHovered
-          ? "0 0 40px rgba(220, 38, 38, 0.6)"
-          : "0 0 20px rgba(220, 38, 38, 0.4)",
+          ? "0 6px 28px rgba(220, 38, 38, 0.5), 0 0 60px rgba(220, 38, 38, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15)"
+          : "0 4px 16px rgba(220, 38, 38, 0.35), 0 0 40px rgba(220, 38, 38, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
       }}
     >
       <motion.div
