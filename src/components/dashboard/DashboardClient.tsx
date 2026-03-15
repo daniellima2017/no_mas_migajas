@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import { RefreshCw, AlertTriangle, ClipboardList, Lock, Clock } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { RefreshCw, AlertTriangle, ClipboardList, Lock, Clock, ChevronDown } from "lucide-react";
 import { LevelBadge } from "@/components/dashboard/LevelBadge";
 import { StreakTimer } from "@/components/dashboard/StreakTimer";
 import { StreakProgressBar } from "@/components/streak/StreakProgressBar";
@@ -45,6 +45,7 @@ export function DashboardClient() {
   const [toastError, setToastError] = useState<string | null>(null);
   const [showResetModal, setShowResetModal] = useState(false);
   const [quizCooldown, setQuizCooldown] = useState(0);
+  const [showScrollHint, setShowScrollHint] = useState(true);
 
   useEffect(() => {
     fetch("/api/auth/check")
@@ -84,6 +85,16 @@ export function DashboardClient() {
     const interval = setInterval(update, 60_000);
     return () => clearInterval(interval);
   }, [data?.lastQuizAt]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setShowScrollHint(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleResetSubmit = useCallback(
     async (formData: { reason: string; cravingLevel: number }) => {
@@ -146,7 +157,7 @@ export function DashboardClient() {
   const streakSeconds = calculateStreakSeconds();
 
   return (
-    <div className="min-h-screen bg-bg-primary">
+    <div className="min-h-screen bg-bg-primary relative">
       <div className="max-w-2xl mx-auto p-4 md:p-6 space-y-8 pb-28">
         <motion.header
           initial={{ opacity: 0, y: -10 }}
@@ -253,6 +264,36 @@ export function DashboardClient() {
           <ReinforcementFeed streakSeconds={streakSeconds} />
         </motion.section>
       </div>
+
+      <AnimatePresence>
+        {showScrollHint && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.3 } }}
+            className="fixed bottom-20 left-0 right-0 lg:bottom-4 flex flex-col items-center pointer-events-none z-40"
+          >
+            <div
+              className="px-4 py-1.5 rounded-full flex items-center gap-1.5 mb-1"
+              style={{
+                background: "rgba(10, 10, 15, 0.85)",
+                border: "1px solid rgba(212, 175, 55, 0.2)",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              <span className="text-[10px] font-medium uppercase tracking-widest text-accent-gold/70">
+                Desliza para ver mas
+              </span>
+            </div>
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ChevronDown className="w-5 h-5 text-accent-gold/50" />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {showResetModal && (
         <ResetModal
