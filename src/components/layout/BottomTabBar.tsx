@@ -42,14 +42,30 @@ export function BottomTabBar() {
             if (tab.isFAB) {
               return (
                 <Link key={tab.href} href={tab.href} className="relative -mt-6">
+                  {/* Pulse ring */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: "rgba(185, 28, 28, 0.3)",
+                    }}
+                    animate={{
+                      scale: [1, 1.6],
+                      opacity: [0.5, 0],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeOut",
+                    }}
+                  />
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="w-14 h-14 rounded-full flex items-center justify-center relative overflow-hidden"
                     style={{
-                      background: "linear-gradient(135deg, #B91C1C 0%, #7F1D1D 100%)",
-                      boxShadow: "0 0 25px rgba(185, 28, 28, 0.4), 0 0 50px rgba(185, 28, 28, 0.15)",
-                      border: "1px solid rgba(212, 175, 55, 0.15)",
+                      background: "linear-gradient(135deg, #DC2626 0%, #B91C1C 50%, #7F1D1D 100%)",
+                      boxShadow: "0 0 25px rgba(185, 28, 28, 0.5), 0 0 50px rgba(185, 28, 28, 0.2)",
+                      border: "1px solid rgba(239, 68, 68, 0.4)",
                     }}
                   >
                     <IconComponent className="w-6 h-6 text-white relative z-10" />
