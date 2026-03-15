@@ -40,11 +40,11 @@ export default function LandingPage() {
 
         <Divider />
 
+        {/* CTA before identification - immediate action */}
+        <MiniCTA />
+
         {/* Block 2: Identificacion */}
         <IdentificationBlock />
-
-        {/* CTA after identification - she just recognized herself */}
-        <MiniCTA />
 
         <Divider />
 

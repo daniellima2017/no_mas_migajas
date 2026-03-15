@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 export function StoryBlock() {
@@ -11,6 +12,25 @@ export function StoryBlock() {
       transition={{ duration: 0.7 }}
       className="px-5 py-12 max-w-xl mx-auto"
     >
+      {/* Laura avatar */}
+      <div className="flex justify-center mb-6">
+        <div
+          className="w-20 h-20 rounded-full overflow-hidden"
+          style={{
+            border: "2px solid rgba(212, 175, 55, 0.3)",
+            boxShadow: "0 0 20px rgba(212, 175, 55, 0.1)",
+          }}
+        >
+          <Image
+            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=face"
+            alt="Laura"
+            width={80}
+            height={80}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+
       <div className="font-[var(--font-inter)] text-zinc-400 text-base md:text-lg leading-relaxed space-y-5">
         <p>
           Hace tres meses, <span className="text-white font-semibold">Laura (32 anos)</span> revisaba

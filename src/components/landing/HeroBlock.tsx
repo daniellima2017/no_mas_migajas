@@ -14,7 +14,7 @@ export function HeroBlock() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7 }}
-      className="px-5 py-4 text-center max-w-2xl mx-auto"
+      className="px-5 py-2 text-center max-w-2xl mx-auto"
     >
       <h1
         className="font-[var(--font-michroma)] text-2xl md:text-4xl leading-tight font-bold mb-6"
@@ -27,20 +27,24 @@ export function HeroBlock() {
         El test de 60 segundos que destruye la mentira que te repites cada noche antes de dormir.
       </h1>
 
-      {/* App Mockup Image - transparent, integrated */}
-      <div className="flex justify-center mb-4">
+      {/* App Mockup Image - floating animation */}
+      <motion.div
+        className="flex justify-center mb-4"
+        animate={{ y: [0, -8, 0] }}
+        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+      >
         <Image
           src="/mockup2.png"
-          alt="No Mas Migajas - App con Inteligencia Artificial"
-          width={500}
-          height={1000}
-          className="w-[90vw] max-w-[460px] md:max-w-[500px] h-auto"
+          alt="No Mas Migajas - Software de Rescate Emocional"
+          width={600}
+          height={1200}
+          className="w-[95vw] max-w-[520px] md:max-w-[580px] h-auto"
           priority
         />
-      </div>
+      </motion.div>
 
-      <p className="text-xs uppercase tracking-widest text-zinc-600 font-[var(--font-mono)] mb-6">
-        Mini-App con Inteligencia Artificial
+      <p className="text-xs uppercase tracking-widest text-zinc-500 font-[var(--font-mono)] mb-6">
+        Software de Rescate Emocional con IA
       </p>
 
       <p className="font-[var(--font-inter)] text-zinc-400 text-lg md:text-xl leading-relaxed mb-8">

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Zap } from "lucide-react";
 import { useScarcity } from "./ScarcityContext";
 
 const CTA_URL = "#"; // Replace with Hotmart checkout URL
@@ -26,32 +26,54 @@ export function PricingBlock() {
       </p>
 
       <div
-        className="rounded-2xl p-8 mb-8"
+        className="rounded-2xl p-8 mb-8 relative overflow-hidden"
         style={{
-          background: "linear-gradient(135deg, rgba(212, 175, 55, 0.06) 0%, rgba(10, 10, 15, 0.98) 100%)",
-          border: "1px solid rgba(212, 175, 55, 0.25)",
-          boxShadow: "0 0 50px rgba(212, 175, 55, 0.1)",
+          background: "linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(10, 10, 15, 0.98) 100%)",
+          border: "2px solid rgba(212, 175, 55, 0.35)",
+          boxShadow: "0 0 60px rgba(212, 175, 55, 0.15), 0 0 120px rgba(212, 175, 55, 0.05)",
         }}
       >
-        <p className="font-[var(--font-inter)] text-zinc-500 text-xs uppercase tracking-widest mb-2">
-          Precio de lanzamiento hoy
-        </p>
-        <div className="flex items-center justify-center gap-3 mb-2">
-          <span className="text-zinc-600 line-through text-lg font-[var(--font-mono)]">$47</span>
+        {/* Corner badge */}
+        <div
+          className="absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[10px] font-bold uppercase tracking-wider"
+          style={{ background: "#9B111E", color: "#fff" }}
+        >
+          -64% OFF
+        </div>
+
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <Zap className="w-4 h-4 text-[#D4AF37]" />
+          <p className="font-[var(--font-inter)] text-[#D4AF37] text-sm uppercase tracking-widest font-bold">
+            Precio de lanzamiento hoy
+          </p>
+          <Zap className="w-4 h-4 text-[#D4AF37]" />
+        </div>
+
+        <div className="flex items-center justify-center gap-4 mb-3">
           <span
-            className="font-[var(--font-mono)] text-5xl md:text-6xl font-bold"
+            className="line-through text-2xl font-bold font-[var(--font-mono)]"
+            style={{ color: "#ef4444" }}
+          >
+            $47
+          </span>
+          <span
+            className="font-[var(--font-mono)] text-6xl md:text-7xl font-bold"
             style={{
-              background: "linear-gradient(135deg, #D4AF37, #c9a227)",
+              background: "linear-gradient(135deg, #D4AF37, #f5d442, #D4AF37)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
+              filter: "drop-shadow(0 0 12px rgba(212, 175, 55, 0.3))",
             }}
           >
             $17
           </span>
-          <span className="text-zinc-500 text-sm">USD</span>
+          <span className="text-zinc-400 text-base font-[var(--font-mono)]">USD</span>
         </div>
-        <p className="font-[var(--font-inter)] text-zinc-500 text-xs mb-6">
-          Acceso anticipado con descuento
+        <p className="font-[var(--font-inter)] text-zinc-500 text-sm mb-2">
+          Pago unico · Acceso de por vida
+        </p>
+        <p className="font-[var(--font-inter)] text-[#D4AF37] text-xs mb-6 font-semibold">
+          Ahorras $30 USD con el precio de lanzamiento
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6 text-sm">
@@ -91,11 +113,17 @@ export function PricingBlock() {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            animate={{
+              boxShadow: [
+                "0 0 20px rgba(212, 175, 55, 0.4), 0 0 40px rgba(212, 175, 55, 0.15)",
+                "0 0 35px rgba(212, 175, 55, 0.6), 0 0 70px rgba(212, 175, 55, 0.25)",
+                "0 0 20px rgba(212, 175, 55, 0.4), 0 0 40px rgba(212, 175, 55, 0.15)",
+              ],
+            }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
             className="w-full py-4 rounded-xl font-[var(--font-michroma)] text-sm md:text-base font-bold uppercase tracking-wider text-black"
             style={{
               background: "linear-gradient(135deg, #D4AF37 0%, #c9a227 50%, #B8941F 100%)",
-              boxShadow:
-                "0 4px 20px rgba(212, 175, 55, 0.4), 0 0 60px rgba(212, 175, 55, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.25)",
               border: "1px solid rgba(212, 175, 55, 0.6)",
             }}
           >

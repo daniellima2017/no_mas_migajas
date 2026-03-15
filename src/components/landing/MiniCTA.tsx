@@ -19,11 +19,17 @@ export function MiniCTA() {
         onClick={scrollToPricing}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        animate={{
+          boxShadow: [
+            "0 0 20px rgba(212, 175, 55, 0.3), 0 0 40px rgba(212, 175, 55, 0.1)",
+            "0 0 30px rgba(212, 175, 55, 0.5), 0 0 60px rgba(212, 175, 55, 0.2)",
+            "0 0 20px rgba(212, 175, 55, 0.3), 0 0 40px rgba(212, 175, 55, 0.1)",
+          ],
+        }}
+        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
         className="w-full py-3.5 rounded-xl font-[var(--font-michroma)] text-xs md:text-sm font-bold uppercase tracking-wider text-black cursor-pointer"
         style={{
           background: "linear-gradient(135deg, #D4AF37 0%, #c9a227 50%, #B8941F 100%)",
-          boxShadow:
-            "0 4px 16px rgba(212, 175, 55, 0.3), 0 0 40px rgba(212, 175, 55, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
           border: "1px solid rgba(212, 175, 55, 0.5)",
         }}
       >

@@ -95,11 +95,17 @@ export function ClosingBlock() {
         onClick={() => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" })}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        animate={{
+          boxShadow: [
+            "0 0 20px rgba(212, 175, 55, 0.4), 0 0 40px rgba(212, 175, 55, 0.15)",
+            "0 0 35px rgba(212, 175, 55, 0.6), 0 0 70px rgba(212, 175, 55, 0.25)",
+            "0 0 20px rgba(212, 175, 55, 0.4), 0 0 40px rgba(212, 175, 55, 0.15)",
+          ],
+        }}
+        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
         className="w-full py-4 rounded-xl font-[var(--font-michroma)] text-sm md:text-base font-bold uppercase tracking-wider text-black cursor-pointer"
         style={{
           background: "linear-gradient(135deg, #D4AF37 0%, #c9a227 50%, #B8941F 100%)",
-          boxShadow:
-            "0 4px 20px rgba(212, 175, 55, 0.4), 0 0 60px rgba(212, 175, 55, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.25)",
           border: "1px solid rgba(212, 175, 55, 0.6)",
         }}
       >

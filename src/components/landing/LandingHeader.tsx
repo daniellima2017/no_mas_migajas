@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export function LandingHeader() {
   return (
-    <header className="pt-8 pb-2 flex justify-center">
+    <header className="pt-3 pb-0 flex justify-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
