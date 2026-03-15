@@ -27,18 +27,23 @@ export function HeroBlock() {
         La verdad de 60 segundos que destruye la mentira que te repites cada noche antes de dormir.
       </h1>
 
-      {/* App Mockup Image - floating animation */}
+      {/* App Mockup Image - floating animation + red glow */}
       <motion.div
-        className="flex justify-center mb-4"
+        className="relative flex justify-center mb-4"
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
       >
+        {/* Red glow behind mockup */}
+        <div
+          className="absolute inset-0 m-auto w-[60%] h-[50%] rounded-full blur-[80px] opacity-40"
+          style={{ background: "radial-gradient(circle, #9B111E 0%, transparent 70%)" }}
+        />
         <Image
           src="/mockup2.png"
-          alt="No Mas Migajas - Software de Rescate Emocional"
+          alt="No Mas Migajas - App de Rescate Emocional"
           width={600}
           height={1200}
-          className="w-[95vw] max-w-[520px] md:max-w-[580px] h-auto"
+          className="relative z-10 w-[95vw] max-w-[520px] md:max-w-[580px] h-auto"
           priority
         />
       </motion.div>
