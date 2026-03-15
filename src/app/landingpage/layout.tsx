@@ -39,7 +39,7 @@ export default function LandingLayout({
 }) {
   return (
     <div
-      className={`${michroma.variable} ${inter.variable} ${jetbrainsMono.variable} min-h-screen bg-[#0a0a0a] text-white antialiased`}
+      className={`${michroma.variable} ${inter.variable} ${jetbrainsMono.variable} min-h-screen bg-[#070709] text-white antialiased`}
     >
       {children}
     </div>
