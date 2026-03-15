@@ -226,20 +226,20 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-3 md:space-y-6">
+    <div className="w-full max-w-2xl mx-auto space-y-4 md:space-y-6">
       {/* Question header */}
       <div
-        className="text-center space-y-1.5 md:space-y-3 p-3 md:p-6 rounded-2xl"
+        className="text-center space-y-2 md:space-y-3 p-4 md:p-6 rounded-2xl"
         style={{
-          background: "linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.04) 100%)",
-          border: "1px solid rgba(212, 175, 55, 0.3)",
-          boxShadow: "0 0 30px rgba(212, 175, 55, 0.08), inset 0 1px 0 rgba(212, 175, 55, 0.1)",
+          background: "linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.06) 100%)",
+          border: "1px solid rgba(212, 175, 55, 0.4)",
+          boxShadow: "0 0 40px rgba(212, 175, 55, 0.12), inset 0 1px 0 rgba(212, 175, 55, 0.15)",
         }}
       >
         <motion.p
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-accent-gold text-xs uppercase tracking-[0.2em] font-bold"
+          className="text-accent-gold text-[0.65rem] md:text-xs uppercase tracking-[0.2em] font-bold"
         >
           {question.context}
         </motion.p>
@@ -247,9 +247,9 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-lg md:text-[1.7rem] font-bold text-white leading-snug"
+          className="text-xl md:text-[1.7rem] font-extrabold text-white leading-snug"
           style={{
-            textShadow: "0 0 40px rgba(212, 175, 55, 0.15)",
+            textShadow: "0 0 40px rgba(212, 175, 55, 0.2)",
           }}
         >
           {question.title}
@@ -257,7 +257,7 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
       </div>
 
       {/* Options */}
-      <div className="grid gap-2 md:gap-3">
+      <div className="grid gap-2.5 md:gap-3">
         {shuffledOptions.map((option, index) => {
           const isSelected = selectedId === option.id;
           const selectedStyles = isSelected ? getSelectedStyles(option) : null;
@@ -280,17 +280,17 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
               >
                 <div
                   className={`
-                    cursor-pointer p-3 md:p-4 rounded-xl transition-all duration-200
+                    cursor-pointer p-3.5 md:p-4 rounded-xl transition-all duration-200
                     ${selectedId && selectedId !== option.id ? "opacity-30" : ""}
                   `}
                   style={{
                     background: isSelected
                       ? selectedStyles!.bg
-                      : "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)",
+                      : "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)",
                     border: isSelected
                       ? `1px solid ${selectedStyles!.border}`
-                      : "1px solid rgba(255, 255, 255, 0.15)",
-                    boxShadow: isSelected ? selectedStyles!.glow : "0 2px 8px rgba(0, 0, 0, 0.3)",
+                      : "1px solid rgba(255, 255, 255, 0.2)",
+                    boxShadow: isSelected ? selectedStyles!.glow : "0 2px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
                     backdropFilter: "blur(10px)",
                   }}
                   onClick={() => handleSelect(option.id)}
@@ -303,9 +303,9 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
                   }}
                   onMouseLeave={(e) => {
                     if (!selectedId) {
-                      e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)";
-                      e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)";
-                      e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.3)";
+                      e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+                      e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)";
+                      e.currentTarget.style.boxShadow = "0 2px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)";
                     }
                   }}
                 >
@@ -316,18 +316,18 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
                       className="flex-shrink-0"
                     >
                       <div
-                        className="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center"
+                        className="w-9 h-9 md:w-10 md:h-10 rounded-lg flex items-center justify-center"
                         style={{
                           background: isSelected
                             ? "rgba(255, 255, 255, 0.15)"
-                            : "rgba(212, 175, 55, 0.1)",
-                          border: "1px solid rgba(212, 175, 55, 0.2)",
+                            : "rgba(212, 175, 55, 0.12)",
+                          border: "1px solid rgba(212, 175, 55, 0.25)",
                         }}
                       >
                         <DynamicIcon name={option.icon} />
                       </div>
                     </motion.div>
-                    <p className="text-white text-xs md:text-base flex-1 font-semibold leading-snug md:leading-relaxed">
+                    <p className="text-white text-sm md:text-base flex-1 font-semibold leading-snug md:leading-relaxed">
                       {option.text}
                     </p>
                   </div>

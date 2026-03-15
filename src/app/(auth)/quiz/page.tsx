@@ -203,11 +203,11 @@ export default function QuizPage() {
   const totalQuestions = QUIZ_QUESTIONS.length;
 
   return (
-    <div className="min-h-screen bg-bg-primary flex flex-col items-center justify-start pt-4 pb-24 px-4">
+    <div className="min-h-screen bg-bg-primary flex flex-col items-center justify-start pt-3 pb-24 px-3">
       <img
         src="/logo.gif"
         alt="No Mas Migajas"
-        className="w-28 h-auto mb-3"
+        className="w-20 h-auto mb-1"
       />
       <AnimatePresence mode="wait">
         {quizState === "quiz" && !showMiniLoading && (
