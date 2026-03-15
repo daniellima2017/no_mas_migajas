@@ -762,5 +762,12 @@ export function selectQuizQuestions(count: number = 15): QuizQuestion[] {
   return shuffled.slice(0, count);
 }
 
+// Restore questions by IDs (preserves order)
+export function getQuestionsByIds(ids: string[]): QuizQuestion[] {
+  return ids
+    .map((id) => QUIZ_POOL.find((q) => q.id === id))
+    .filter((q): q is QuizQuestion => q !== undefined);
+}
+
 // Keep backward compatibility
 export const QUIZ_QUESTIONS = QUIZ_POOL;

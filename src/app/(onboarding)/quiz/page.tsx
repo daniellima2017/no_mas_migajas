@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { QuizQuestion } from "@/components/quiz/QuizQuestion";
@@ -8,7 +8,7 @@ import { QuizProgress } from "@/components/quiz/QuizProgress";
 import { FakeLoading } from "@/components/quiz/FakeLoading";
 import { QuizResult } from "@/components/quiz/QuizResult";
 import { useQuiz } from "@/hooks/useQuiz";
-import { selectQuizQuestions } from "@/lib/scoring/quiz-data";
+import { selectQuizQuestions, getQuestionsByIds } from "@/lib/scoring/quiz-data";
 import { Loader2, Clock, ArrowRight } from "lucide-react";
 
 type QuizState = "quiz" | "mini-loading" | "fake-loading" | "result" | "cooldown";
@@ -137,11 +137,37 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
   const [showMiniLoading, setShowMiniLoading] = useState(false);
 
-  const questions = useMemo(() => selectQuizQuestions(15), []);
+  const [questions, setQuestions] = useState(() => {
+    const isRetake = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("retake");
+
+    // Retake: clear stored questions and select new ones
+    if (isRetake && typeof window !== "undefined") {
+      sessionStorage.removeItem("quiz_question_ids");
+      const newQuestions = selectQuizQuestions(15);
+      sessionStorage.setItem("quiz_question_ids", JSON.stringify(newQuestions.map((q) => q.id)));
+      return newQuestions;
+    }
+
+    // Try to restore from sessionStorage (survives reload)
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("quiz_question_ids");
+      if (stored) {
+        const ids = JSON.parse(stored) as string[];
+        const restored = getQuestionsByIds(ids);
+        if (restored.length === ids.length) return restored;
+      }
+    }
+
+    // First time: select and store
+    const newQuestions = selectQuizQuestions(15);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("quiz_question_ids", JSON.stringify(newQuestions.map((q) => q.id)));
+    }
+    return newQuestions;
+  });
   const { isLoading, error, result, cooldownUntil, submitQuiz } = useQuiz();
 
   // Only redirect to dashboard if this is a fresh page load (not a retake)
-  // The "retake" param is set when navigating from the dashboard button
   useEffect(() => {
     const isRetake = new URLSearchParams(window.location.search).has("retake");
     if (isRetake) return;
