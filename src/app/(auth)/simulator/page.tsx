@@ -17,6 +17,7 @@ export default function SimulatorPage() {
     error,
     classification,
     panicResponse,
+    activeMode,
     analyze,
     panic,
     reset,
@@ -63,6 +64,7 @@ export default function SimulatorPage() {
             response={response}
             isLoading={isLoading}
             classification={classification}
+            mode={activeMode}
           />
 
           {error && (

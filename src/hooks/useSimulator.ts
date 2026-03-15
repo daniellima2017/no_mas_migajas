@@ -14,6 +14,7 @@ interface UseSimulatorReturn {
   error: string | null;
   classification: string | null;
   panicResponse: PanicResponse | null;
+  activeMode: "received" | "sending" | null;
   analyze: (text: string, mode: "received" | "sending") => Promise<void>;
   panic: () => Promise<void>;
   reset: () => void;
@@ -25,6 +26,7 @@ export function useSimulator(): UseSimulatorReturn {
   const [error, setError] = useState<string | null>(null);
   const [classification, setClassification] = useState<string | null>(null);
   const [panicResponse, setPanicResponse] = useState<PanicResponse | null>(null);
+  const [activeMode, setActiveMode] = useState<"received" | "sending" | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const analyze = useCallback(
@@ -33,6 +35,7 @@ export function useSimulator(): UseSimulatorReturn {
       setClassification(null);
       setPanicResponse(null);
       setResponse("");
+      setActiveMode(mode);
       setIsLoading(true);
 
       if (abortControllerRef.current) {
@@ -134,6 +137,7 @@ export function useSimulator(): UseSimulatorReturn {
     setError(null);
     setClassification(null);
     setPanicResponse(null);
+    setActiveMode(null);
   }, []);
 
   return {
@@ -142,6 +146,7 @@ export function useSimulator(): UseSimulatorReturn {
     error,
     classification,
     panicResponse,
+    activeMode,
     analyze,
     panic,
     reset,
