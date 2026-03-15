@@ -84,7 +84,7 @@ function CooldownTimer({ until, onGoToDashboard }: { until: string; onGoToDashbo
 
       <button
         onClick={onGoToDashboard}
-        className="btn-premium px-8 py-3.5 text-base flex items-center gap-2"
+        className="btn-premium px-8 py-3.5 text-base flex items-center gap-2 mx-auto"
       >
         Ir al Dashboard
         <ArrowRight className="h-5 w-5" />
