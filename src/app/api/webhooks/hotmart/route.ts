@@ -26,10 +26,19 @@ export async function POST(request: Request) {
   try {
     const payload: HotmartPayload = await request.json();
 
-    // Hotmart sends hottok in the request body (fallback to header)
-    const hottok = payload.hottok || request.headers.get("x-hottok");
+    // Debug: log payload keys and headers to find where hottok comes from
+    console.log("Webhook received - payload keys:", Object.keys(payload));
+    console.log("Webhook received - hottok in body:", payload.hottok ? "present" : "missing");
+    console.log("Webhook received - x-hottok header:", request.headers.get("x-hottok") ? "present" : "missing");
+    console.log("Webhook received - x-hotmart-hottok header:", request.headers.get("x-hotmart-hottok") ? "present" : "missing");
+
+    // Try multiple locations where Hotmart might send the hottok
+    const hottok = payload.hottok
+      || request.headers.get("x-hottok")
+      || request.headers.get("x-hotmart-hottok");
 
     if (!verifyHotmartToken(hottok)) {
+      console.error("Webhook auth failed - hottok value:", hottok, "expected:", process.env.HOTMART_HOTTOK ? "configured" : "NOT configured");
       return NextResponse.json(
         { error: "Token invalido" },
         { status: 401 }
