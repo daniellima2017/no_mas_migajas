@@ -17,6 +17,7 @@ import { ClosingBlock } from "@/components/landing/ClosingBlock";
 import { MiniCTA } from "@/components/landing/MiniCTA";
 import { SimulatorMockup } from "@/components/landing/SimulatorMockup";
 import { DashboardMockup } from "@/components/landing/DashboardMockup";
+import { QuizMockup } from "@/components/landing/QuizMockup";
 import { SocialProofToast } from "@/components/landing/SocialProofToast";
 import { ScarcityContext } from "@/components/landing/ScarcityContext";
 
@@ -60,6 +61,9 @@ export default function LandingPage() {
         <MiniCTA />
 
         <Divider />
+
+        {/* VISUAL: Quiz mockup - Detector de Migajas */}
+        <QuizMockup />
 
         {/* Block 5: Antidoto - Features */}
         <AntidoteBlock />

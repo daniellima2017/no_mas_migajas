@@ -24,7 +24,7 @@ export function HeroBlock() {
           WebkitTextFillColor: "transparent",
         }}
       >
-        El test de 60 segundos que destruye la mentira que te repites cada noche antes de dormir.
+        La verdad de 60 segundos que destruye la mentira que te repites cada noche antes de dormir.
       </h1>
 
       {/* App Mockup Image - floating animation */}
