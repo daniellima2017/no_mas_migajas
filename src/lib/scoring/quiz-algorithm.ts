@@ -1,4 +1,4 @@
-import { QUIZ_QUESTIONS } from "./quiz-data";
+import { QUIZ_POOL } from "./quiz-data";
 
 export interface QuizAnswer {
   questionId: string;
@@ -50,7 +50,7 @@ export function calculateScore(answers: QuizAnswer[]): QuizResult {
   let rawPoints = 0;
 
   for (const answer of answers) {
-    const question = QUIZ_QUESTIONS.find((q) => q.id === answer.questionId);
+    const question = QUIZ_POOL.find((q) => q.id === answer.questionId);
     if (!question) continue;
 
     const option = question.options.find((opt) => opt.id === answer.optionId);

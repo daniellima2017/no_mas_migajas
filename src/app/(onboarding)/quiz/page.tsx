@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { QuizQuestion } from "@/components/quiz/QuizQuestion";
@@ -8,7 +8,7 @@ import { QuizProgress } from "@/components/quiz/QuizProgress";
 import { FakeLoading } from "@/components/quiz/FakeLoading";
 import { QuizResult } from "@/components/quiz/QuizResult";
 import { useQuiz } from "@/hooks/useQuiz";
-import { QUIZ_QUESTIONS } from "@/lib/scoring/quiz-data";
+import { selectQuizQuestions } from "@/lib/scoring/quiz-data";
 import { Loader2, Clock, ArrowRight } from "lucide-react";
 
 type QuizState = "quiz" | "mini-loading" | "fake-loading" | "result" | "cooldown";
@@ -137,6 +137,7 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
   const [showMiniLoading, setShowMiniLoading] = useState(false);
 
+  const questions = useMemo(() => selectQuizQuestions(15), []);
   const { isLoading, error, result, cooldownUntil, submitQuiz } = useQuiz();
 
   // Only redirect to dashboard if this is a fresh page load (not a retake)
@@ -156,7 +157,7 @@ export default function QuizPage() {
   }, [router]);
 
   const handleAnswer = useCallback((optionId: string) => {
-    const currentQuestion = QUIZ_QUESTIONS[currentStep];
+    const currentQuestion = questions[currentStep];
     const newAnswer: QuizAnswer = {
       questionId: currentQuestion.id,
       optionId,
@@ -164,7 +165,7 @@ export default function QuizPage() {
 
     setAnswers((prev) => [...prev, newAnswer]);
 
-    if (currentStep === QUIZ_QUESTIONS.length - 1) {
+    if (currentStep === questions.length - 1) {
       setQuizState("fake-loading");
     } else if (currentStep === MINI_LOADING_THRESHOLD - 1) {
       setShowMiniLoading(true);
@@ -173,7 +174,7 @@ export default function QuizPage() {
         setCurrentStep((prev) => prev + 1);
       }, 300);
     }
-  }, [currentStep]);
+  }, [currentStep, questions]);
 
   useEffect(() => {
     if (showMiniLoading) {
@@ -199,8 +200,8 @@ export default function QuizPage() {
     }
   }, [answers, submitQuiz]);
 
-  const currentQuestion = QUIZ_QUESTIONS[currentStep];
-  const totalQuestions = QUIZ_QUESTIONS.length;
+  const currentQuestion = questions[currentStep];
+  const totalQuestions = questions.length;
 
   return (
     <div className="min-h-screen bg-bg-primary flex flex-col items-center justify-start pt-5 pb-6 px-4">
