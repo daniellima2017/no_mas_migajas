@@ -13,14 +13,16 @@ import { BonusBlock } from "@/components/landing/BonusBlock";
 import { GuaranteeBlock } from "@/components/landing/GuaranteeBlock";
 import { FAQBlock } from "@/components/landing/FAQBlock";
 import { ClosingBlock } from "@/components/landing/ClosingBlock";
+import { MiniCTA } from "@/components/landing/MiniCTA";
+import { SimulatorMockup } from "@/components/landing/SimulatorMockup";
+import { DashboardMockup } from "@/components/landing/DashboardMockup";
 
 export default function LandingPage() {
   return (
     <main className="overflow-hidden">
-      {/* Block 0: Header */}
+      {/* Header: Logo */}
       <LandingHeader />
 
-      {/* Dividers between sections */}
       <Divider />
 
       {/* Block 1: Hero / Gancho */}
@@ -30,6 +32,9 @@ export default function LandingPage() {
 
       {/* Block 2: Identificacion */}
       <IdentificationBlock />
+
+      {/* CTA after identification - she just recognized herself */}
+      <MiniCTA />
 
       <Divider />
 
@@ -41,10 +46,19 @@ export default function LandingPage() {
       {/* Block 4: Regla de los 3 Silencios */}
       <ThreeSilencesBlock />
 
+      {/* CTA after emotional impact */}
+      <MiniCTA />
+
       <Divider />
 
-      {/* Block 5: Antidoto - Corazon de la oferta */}
+      {/* Block 5: Antidoto - Features */}
       <AntidoteBlock />
+
+      {/* VISUAL: Simulator mockup in action */}
+      <SimulatorMockup />
+
+      {/* CTA after seeing the simulator */}
+      <MiniCTA />
 
       <Divider />
 
@@ -53,18 +67,27 @@ export default function LandingPage() {
 
       <Divider />
 
-      {/* Block 7: Preview del sistema */}
+      {/* Block 7: Preview del sistema (gauge) */}
       <PreviewBlock />
+
+      {/* VISUAL: Dashboard mockup live */}
+      <DashboardMockup />
+
+      {/* CTA after seeing app previews */}
+      <MiniCTA />
 
       <Divider />
 
-      {/* Block 8: Precio + CTA */}
+      {/* Block 8: Precio + CTA principal */}
       <PricingBlock />
 
       <Divider />
 
       {/* Block 9: Bonos */}
       <BonusBlock />
+
+      {/* CTA after bonuses */}
+      <MiniCTA />
 
       <Divider />
 

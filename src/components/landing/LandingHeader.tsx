@@ -13,9 +13,9 @@ export function LandingHeader() {
       >
         {/* Glow ring */}
         <motion.div
-          className="absolute inset-0 rounded-full"
+          className="absolute -inset-4 rounded-full"
           style={{
-            background: "radial-gradient(circle, rgba(155, 17, 30, 0.4) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(155, 17, 30, 0.35) 0%, transparent 70%)",
             filter: "blur(20px)",
           }}
           animate={{
@@ -24,27 +24,11 @@ export function LandingHeader() {
           }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         />
-        {/* Logo disc */}
-        <div
-          className="relative w-20 h-20 rounded-full flex items-center justify-center"
-          style={{
-            background: "linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%)",
-            border: "2px solid rgba(155, 17, 30, 0.5)",
-            boxShadow:
-              "0 0 30px rgba(155, 17, 30, 0.3), inset 0 0 20px rgba(0,0,0,0.8)",
-          }}
-        >
-          <span
-            className="font-[var(--font-michroma)] text-3xl font-bold"
-            style={{
-              background: "linear-gradient(135deg, #D4AF37 0%, #9B111E 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            N
-          </span>
-        </div>
+        <img
+          src="/logo_lp.png"
+          alt="No Mas Migajas"
+          className="relative w-36 h-auto"
+        />
       </motion.div>
     </header>
   );
