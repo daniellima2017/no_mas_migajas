@@ -1,6 +1,7 @@
-const CACHE_NAME = "nmm-v3";
-const STATIC_CACHE = "nmm-static-v3";
-const DYNAMIC_CACHE = "nmm-dynamic-v3";
+const CACHE_VERSION = 4;
+const CACHE_NAME = "nmm-v" + CACHE_VERSION;
+const STATIC_CACHE = "nmm-static-v" + CACHE_VERSION;
+const DYNAMIC_CACHE = "nmm-dynamic-v" + CACHE_VERSION;
 
 const STATIC_ASSETS = [
   "/",
@@ -49,6 +50,12 @@ self.addEventListener("activate", (event) => {
           )
           .map((cacheName) => caches.delete(cacheName))
       );
+    }).then(() => {
+      return self.clients.matchAll({ type: "window" });
+    }).then((clients) => {
+      clients.forEach((client) => {
+        client.postMessage({ type: "SW_UPDATED", version: CACHE_VERSION });
+      });
     })
   );
   self.clients.claim();
