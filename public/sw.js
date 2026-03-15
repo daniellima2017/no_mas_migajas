@@ -1,6 +1,6 @@
-const CACHE_NAME = "nmm-v2";
-const STATIC_CACHE = "nmm-static-v2";
-const DYNAMIC_CACHE = "nmm-dynamic-v2";
+const CACHE_NAME = "nmm-v3";
+const STATIC_CACHE = "nmm-static-v3";
+const DYNAMIC_CACHE = "nmm-dynamic-v3";
 
 const STATIC_ASSETS = [
   "/",
