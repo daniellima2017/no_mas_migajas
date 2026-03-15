@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 export function LandingHeader() {
@@ -13,7 +14,7 @@ export function LandingHeader() {
       >
         {/* Glow ring */}
         <motion.div
-          className="absolute -inset-4 rounded-full"
+          className="absolute -inset-6 rounded-full"
           style={{
             background: "radial-gradient(circle, rgba(155, 17, 30, 0.35) 0%, transparent 70%)",
             filter: "blur(20px)",
@@ -24,10 +25,13 @@ export function LandingHeader() {
           }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         />
-        <img
+        <Image
           src="/logo_lp.png"
           alt="No Mas Migajas"
+          width={160}
+          height={160}
           className="relative w-36 h-auto"
+          priority
         />
       </motion.div>
     </header>

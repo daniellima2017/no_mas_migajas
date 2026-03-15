@@ -46,9 +46,6 @@ export default function LandingPage() {
       {/* Block 4: Regla de los 3 Silencios */}
       <ThreeSilencesBlock />
 
-      {/* CTA after emotional impact */}
-      <MiniCTA />
-
       <Divider />
 
       {/* Block 5: Antidoto - Features */}
@@ -56,9 +53,6 @@ export default function LandingPage() {
 
       {/* VISUAL: Simulator mockup in action */}
       <SimulatorMockup />
-
-      {/* CTA after seeing the simulator */}
-      <MiniCTA />
 
       <Divider />
 
@@ -85,9 +79,6 @@ export default function LandingPage() {
 
       {/* Block 9: Bonos */}
       <BonusBlock />
-
-      {/* CTA after bonuses */}
-      <MiniCTA />
 
       <Divider />
 
