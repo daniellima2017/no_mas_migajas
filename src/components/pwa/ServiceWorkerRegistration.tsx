@@ -8,7 +8,8 @@ export function ServiceWorkerRegistration() {
       navigator.serviceWorker
         .register("/sw.js")
         .then((registration) => {
-          console.log("Service Worker registrado:", registration.scope);
+          // Check for updates immediately
+          registration.update();
 
           registration.addEventListener("updatefound", () => {
             const installingWorker = registration.installing;
@@ -18,7 +19,10 @@ export function ServiceWorkerRegistration() {
                   installingWorker.state === "installed" &&
                   navigator.serviceWorker.controller
                 ) {
-                  console.log("Nueva version disponible");
+                  // Force the new service worker to activate immediately
+                  installingWorker.postMessage({ type: "SKIP_WAITING" });
+                  // Reload to use the new version
+                  window.location.reload();
                 }
               });
             }
