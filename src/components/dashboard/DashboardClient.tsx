@@ -199,13 +199,17 @@ export function DashboardClient() {
         >
           <button
             onClick={() => setShowResetModal(true)}
-            className="px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 text-accent-red"
+            className="w-full py-4 rounded-xl text-base font-bold uppercase tracking-widest transition-all duration-300 text-white"
             style={{
-              background: "rgba(255, 59, 48, 0.06)",
-              border: "1px solid rgba(255, 59, 48, 0.2)",
+              background: "linear-gradient(135deg, rgba(255, 59, 48, 0.15) 0%, rgba(255, 59, 48, 0.08) 100%)",
+              border: "2px solid rgba(255, 59, 48, 0.4)",
+              boxShadow: "0 4px 20px rgba(255, 59, 48, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
             }}
           >
-            Registrar una recaida
+            <span className="flex items-center justify-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-accent-red" />
+              <span className="text-accent-red">Registrar una recaida</span>
+            </span>
           </button>
         </motion.section>
 
