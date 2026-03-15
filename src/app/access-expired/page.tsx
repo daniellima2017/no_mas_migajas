@@ -41,7 +41,7 @@ export default function AccessExpiredPage() {
         </p>
 
         <a
-          href="mailto:soporte@nomasmigajas.com"
+          href="mailto:soporte@nomasmigajas.site"
           className="inline-flex items-center justify-center gap-2 rounded-lg bg-btn-primary px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-white/90"
         >
           <Mail className="h-4 w-4" />

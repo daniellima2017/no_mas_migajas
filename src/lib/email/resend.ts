@@ -102,7 +102,7 @@ export async function sendPasswordResetEmail({ email, password }: SendPasswordRe
 
   try {
     await resend.emails.send({
-      from: "No Mas Migajas <noreply@nomasmigajas.com>",
+      from: "No Mas Migajas <noreply@nomasmigajas.site>",
       to: email,
       subject: "Recuperacion de contrasena - No Mas Migajas",
       html,
@@ -200,7 +200,7 @@ export async function sendWelcomeEmail({ email, name, password }: SendWelcomeEma
 
   try {
     await resend.emails.send({
-      from: "No Mas Migajas <noreply@nomasmigajas.com>",
+      from: "No Mas Migajas <noreply@nomasmigajas.site>",
       to: email,
       subject: "Tu acceso a No Mas Migajas",
       html,
