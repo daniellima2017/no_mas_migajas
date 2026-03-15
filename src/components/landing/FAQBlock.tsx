@@ -19,7 +19,7 @@ const FAQS = [
   },
   {
     q: "¿Tengo que pagar una suscripcion mensual?",
-    a: "No. Es un pago unico de $17. Acceso completo al sistema, todas las herramientas y todos los bonos. Para siempre.",
+    a: "No. Son solo $17. Acceso completo al sistema, todas las herramientas y todos los bonos incluidos.",
   },
   {
     q: "¿Como recibo el acceso?",

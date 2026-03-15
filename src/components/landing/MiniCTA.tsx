@@ -36,7 +36,7 @@ export function MiniCTA() {
         Activar mi Detector de Migajas
       </motion.button>
       <p className="text-center text-zinc-600 text-[10px] mt-2 font-[var(--font-inter)]">
-        Acceso inmediato. Pago unico. Garantia de 7 dias.
+        Acceso inmediato. Garantia de 7 dias.
       </p>
     </motion.div>
   );

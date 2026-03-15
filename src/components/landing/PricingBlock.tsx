@@ -70,7 +70,7 @@ export function PricingBlock() {
           <span className="text-zinc-400 text-base font-[var(--font-mono)]">USD</span>
         </div>
         <p className="font-[var(--font-inter)] text-zinc-500 text-sm mb-2">
-          Pago unico · Acceso de por vida
+          Acceso completo · Todas las herramientas
         </p>
         <p className="font-[var(--font-inter)] text-[#D4AF37] text-xs mb-6 font-semibold">
           Ahorras $30 USD con el precio de lanzamiento
