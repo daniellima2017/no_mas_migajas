@@ -34,13 +34,13 @@ export function GuaranteeBlock() {
           Garantia de Dignidad — 7 dias
         </h2>
 
-        <p className="font-[var(--font-inter)] text-zinc-400 text-sm leading-relaxed mb-4">
+        <p className="font-[var(--font-inter)] text-zinc-400 text-base leading-relaxed mb-4">
           Si en la primera semana el Simulador Hielo Seco no te salvo la dignidad al menos 3 veces,
           o si el Indice de Migajas no te dio la claridad que necesitabas para dejar de sufrir, te
           devolvemos el 100% de tu inversion.
         </p>
 
-        <p className="font-[var(--font-inter)] text-zinc-500 text-sm">
+        <p className="font-[var(--font-inter)] text-zinc-500 text-base">
           Sin preguntas. Sin resentimientos. Sin hacerte sentir culpable{" "}
           <span className="text-zinc-600 italic">(de eso ya se encarga el)</span>. El riesgo es todo
           mio.

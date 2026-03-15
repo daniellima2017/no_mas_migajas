@@ -46,7 +46,7 @@ export function BonusBlock() {
       >
         Bonos Incluidos
       </h2>
-      <p className="font-[var(--font-inter)] text-zinc-500 text-sm text-center mb-8">
+      <p className="font-[var(--font-inter)] text-zinc-500 text-base text-center mb-8">
         Todo esto esta incluido sin costo adicional cuando activas tu acceso hoy:
       </p>
 
@@ -94,7 +94,7 @@ export function BonusBlock() {
                   <h3 className="font-[var(--font-michroma)] text-xs text-white mb-2">
                     {bonus.title}
                   </h3>
-                  <p className="font-[var(--font-inter)] text-zinc-500 text-xs leading-relaxed">
+                  <p className="font-[var(--font-inter)] text-zinc-500 text-sm leading-relaxed">
                     {bonus.description}
                   </p>
                 </div>

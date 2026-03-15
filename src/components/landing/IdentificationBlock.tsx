@@ -59,14 +59,14 @@ export function IdentificationBlock() {
               >
                 <Check className="w-3 h-3 text-[#9B111E]" />
               </div>
-              <p className="font-[var(--font-inter)] text-zinc-300 text-sm leading-relaxed">
+              <p className="font-[var(--font-inter)] text-zinc-300 text-base leading-relaxed">
                 {item}
               </p>
             </motion.div>
           ))}
         </div>
 
-        <p className="font-[var(--font-inter)] text-center mt-8 text-sm">
+        <p className="font-[var(--font-inter)] text-center mt-8 text-base">
           <span className="text-zinc-400">Si reconociste 2 o mas…</span>{" "}
           <span className="text-[#9B111E] font-bold">
             necesitas ver tu Indice de Migajas. Ahora.

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { HeroBlock } from "@/components/landing/HeroBlock";
 import { IdentificationBlock } from "@/components/landing/IdentificationBlock";
@@ -16,85 +17,98 @@ import { ClosingBlock } from "@/components/landing/ClosingBlock";
 import { MiniCTA } from "@/components/landing/MiniCTA";
 import { SimulatorMockup } from "@/components/landing/SimulatorMockup";
 import { DashboardMockup } from "@/components/landing/DashboardMockup";
+import { SocialProofToast } from "@/components/landing/SocialProofToast";
+import { ScarcityContext } from "@/components/landing/ScarcityContext";
 
 export default function LandingPage() {
+  const [connected, setConnected] = useState(37);
+  const [remaining, setRemaining] = useState(84);
+
+  const handlePurchase = useCallback(() => {
+    setConnected((prev) => prev + Math.floor(Math.random() * 3) + 1);
+    setRemaining((prev) => Math.max(12, prev - 1));
+  }, []);
+
   return (
-    <main className="overflow-hidden">
-      {/* Header: Logo */}
-      <LandingHeader />
+    <ScarcityContext.Provider value={{ connected, remaining }}>
+      <main className="overflow-hidden">
+        {/* Header: Logo */}
+        <LandingHeader />
 
-      <Divider />
+        {/* Block 1: Hero / Gancho */}
+        <HeroBlock />
 
-      {/* Block 1: Hero / Gancho */}
-      <HeroBlock />
+        <Divider />
 
-      <Divider />
+        {/* Block 2: Identificacion */}
+        <IdentificationBlock />
 
-      {/* Block 2: Identificacion */}
-      <IdentificationBlock />
+        {/* CTA after identification - she just recognized herself */}
+        <MiniCTA />
 
-      {/* CTA after identification - she just recognized herself */}
-      <MiniCTA />
+        <Divider />
 
-      <Divider />
+        {/* Block 3: Micro-historia */}
+        <StoryBlock />
 
-      {/* Block 3: Micro-historia */}
-      <StoryBlock />
+        <Divider />
 
-      <Divider />
+        {/* Block 4: Regla de los 3 Silencios */}
+        <ThreeSilencesBlock />
 
-      {/* Block 4: Regla de los 3 Silencios */}
-      <ThreeSilencesBlock />
+        {/* CTA after emotional impact of "Y lo peor" */}
+        <MiniCTA />
 
-      <Divider />
+        <Divider />
 
-      {/* Block 5: Antidoto - Features */}
-      <AntidoteBlock />
+        {/* Block 5: Antidoto - Features */}
+        <AntidoteBlock />
 
-      {/* VISUAL: Simulator mockup in action */}
-      <SimulatorMockup />
+        {/* VISUAL: Simulator mockup in action */}
+        <SimulatorMockup />
 
-      <Divider />
+        <Divider />
 
-      {/* Block 6: Los 4 Niveles */}
-      <LevelsBlock />
+        {/* Block 6: Los 4 Niveles */}
+        <LevelsBlock />
 
-      <Divider />
+        <Divider />
 
-      {/* Block 7: Preview del sistema (gauge) */}
-      <PreviewBlock />
+        {/* Block 7: Preview del sistema (gauge) */}
+        <PreviewBlock />
 
-      {/* VISUAL: Dashboard mockup live */}
-      <DashboardMockup />
+        {/* VISUAL: Dashboard mockup live */}
+        <DashboardMockup />
 
-      {/* CTA after seeing app previews */}
-      <MiniCTA />
+        <Divider />
 
-      <Divider />
+        {/* Block 8: Precio + CTA principal */}
+        <PricingBlock />
 
-      {/* Block 8: Precio + CTA principal */}
-      <PricingBlock />
+        <Divider />
 
-      <Divider />
+        {/* Block 9: Bonos */}
+        <BonusBlock />
 
-      {/* Block 9: Bonos */}
-      <BonusBlock />
+        <Divider />
 
-      <Divider />
+        {/* Block 10: Garantia */}
+        <GuaranteeBlock />
 
-      {/* Block 10: Garantia */}
-      <GuaranteeBlock />
+        <Divider />
 
-      <Divider />
+        {/* Block 11: FAQ */}
+        <FAQBlock />
 
-      {/* Block 11: FAQ */}
-      <FAQBlock />
+        <Divider />
 
-      <Divider />
+        {/* Block 12: Cierre definitivo */}
+        <ClosingBlock />
 
-      {/* Block 12: Cierre definitivo */}
-      <ClosingBlock />
-    </main>
+        {/* Social proof toast */}
+        <SocialProofToast onPurchase={handlePurchase} />
+      </main>
+    </ScarcityContext.Provider>
   );
 }
 

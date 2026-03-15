@@ -75,7 +75,7 @@ export function LevelsBlock() {
               <p className="font-[var(--font-michroma)] text-sm font-bold mb-1" style={{ color: level.color }}>
                 {level.label}
               </p>
-              <p className="font-[var(--font-inter)] text-zinc-400 text-sm">
+              <p className="font-[var(--font-inter)] text-zinc-400 text-base">
                 {level.description}
               </p>
             </div>

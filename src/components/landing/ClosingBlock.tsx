@@ -2,8 +2,11 @@
 
 import { motion } from "framer-motion";
 import { AlertTriangle } from "lucide-react";
+import { useScarcity } from "./ScarcityContext";
 
 export function ClosingBlock() {
+  const { connected, remaining } = useScarcity();
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
@@ -12,7 +15,7 @@ export function ClosingBlock() {
       transition={{ duration: 0.7 }}
       className="px-5 py-16 max-w-xl mx-auto text-center"
     >
-      <p className="font-[var(--font-inter)] text-zinc-500 text-sm mb-8">
+      <p className="font-[var(--font-inter)] text-zinc-500 text-base mb-8">
         No permitas que pasen otros 10 anos viviendo de sobras emocionales. No esperes a que el
         cambie, porque no va a cambiar. No esperes a tocar fondo, porque el fondo siempre puede ser
         peor.
@@ -22,7 +25,7 @@ export function ClosingBlock() {
         <p className="font-[var(--font-michroma)] text-base text-white">
           Hay dos tipos de mujeres:
         </p>
-        <p className="font-[var(--font-inter)] text-zinc-500 text-sm">
+        <p className="font-[var(--font-inter)] text-zinc-500 text-base">
           Las que prefieren no saber la verdad.
         </p>
         <p
@@ -40,7 +43,7 @@ export function ClosingBlock() {
         </p>
       </div>
 
-      <p className="font-[var(--font-inter)] text-zinc-400 text-sm mb-6">
+      <p className="font-[var(--font-inter)] text-zinc-400 text-base mb-6">
         Tu dignidad no tiene precio. Pero tu libertad hoy cuesta solo{" "}
         <span
           className="font-bold text-lg font-[var(--font-mono)]"
@@ -59,13 +62,31 @@ export function ClosingBlock() {
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <span className="text-zinc-400 font-[var(--font-inter)]">
-            Usuarias conectadas: <span className="text-white font-semibold">37</span>
+            Usuarias conectadas:{" "}
+            <motion.span
+              key={connected}
+              initial={{ scale: 1.4, color: "#22c55e" }}
+              animate={{ scale: 1, color: "#ffffff" }}
+              transition={{ duration: 0.6 }}
+              className="font-semibold inline-block"
+            >
+              {connected}
+            </motion.span>
           </span>
         </div>
         <div className="flex items-center gap-2">
           <AlertTriangle className="w-3.5 h-3.5 text-[#9B111E]" />
           <span className="text-[#9B111E] font-semibold font-[var(--font-mono)]">
-            Accesos restantes: 84
+            Accesos restantes:{" "}
+            <motion.span
+              key={remaining}
+              initial={{ scale: 1.4, color: "#ef4444" }}
+              animate={{ scale: 1, color: "#9B111E" }}
+              transition={{ duration: 0.6 }}
+              className="inline-block"
+            >
+              {remaining}
+            </motion.span>
           </span>
         </div>
       </div>

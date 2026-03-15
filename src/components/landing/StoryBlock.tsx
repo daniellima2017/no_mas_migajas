@@ -11,7 +11,7 @@ export function StoryBlock() {
       transition={{ duration: 0.7 }}
       className="px-5 py-12 max-w-xl mx-auto"
     >
-      <div className="font-[var(--font-inter)] text-zinc-400 text-sm md:text-base leading-relaxed space-y-5">
+      <div className="font-[var(--font-inter)] text-zinc-400 text-base md:text-lg leading-relaxed space-y-5">
         <p>
           Hace tres meses, <span className="text-white font-semibold">Laura (32 anos)</span> revisaba
           su WhatsApp <span className="text-[#9B111E] font-semibold">47 veces al dia</span>. Contaba

@@ -38,13 +38,13 @@ export function ThreeSilencesBlock() {
         ¿Por que te sientes tan agotada?
       </h2>
 
-      <p className="font-[var(--font-inter)] text-zinc-400 text-sm text-center mb-8">
+      <p className="font-[var(--font-inter)] text-zinc-400 text-base md:text-lg text-center mb-8">
         No es solo el desamor. Es el desgaste de vivir en la incertidumbre permanente. Nuestro
         sistema se basa en la{" "}
         <span className="text-[#D4AF37] font-bold">Regla de los 3 Silencios™.</span>
       </p>
 
-      <p className="font-[var(--font-inter)] text-zinc-500 text-xs uppercase tracking-widest text-center mb-4">
+      <p className="font-[var(--font-inter)] text-zinc-500 text-sm uppercase tracking-widest text-center mb-4">
         Si el:
       </p>
 
@@ -70,7 +70,7 @@ export function ThreeSilencesBlock() {
               >
                 <Icon className="w-5 h-5 text-[#9B111E]" />
               </div>
-              <p className="font-[var(--font-inter)] text-zinc-300 text-sm leading-relaxed pt-2">
+              <p className="font-[var(--font-inter)] text-zinc-300 text-base leading-relaxed pt-2">
                 {item.text}
               </p>
             </motion.div>
@@ -78,14 +78,14 @@ export function ThreeSilencesBlock() {
         })}
       </div>
 
-      <div className="font-[var(--font-inter)] text-sm text-zinc-400 space-y-4">
+      <div className="font-[var(--font-inter)] text-base text-zinc-400 space-y-4">
         <p>
           Entonces el sistema detecta que eres su{" "}
           <span className="text-[#9B111E] font-bold">Opcion de Reserva</span>. El no tiene miedo a
           perderte porque sabe que tu Adiccion a la Esperanza siempre te hara volver. El esta
           midiendo cuanto desprecio estas dispuesta a tolerar para mantenerlo cerca.
         </p>
-        <p className="text-[#9B111E] font-semibold text-center text-base">
+        <p className="text-[#9B111E] font-semibold text-center text-lg">
           Y lo peor: cada vez que le escribes primero, le confirmas que puede seguir haciendolo.
         </p>
       </div>

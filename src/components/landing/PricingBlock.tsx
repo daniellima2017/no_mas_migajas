@@ -1,24 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { AlertTriangle } from "lucide-react";
+import { useScarcity } from "./ScarcityContext";
 
 const CTA_URL = "#"; // Replace with Hotmart checkout URL
 
 export function PricingBlock() {
-  const [remaining, setRemaining] = useState(84);
-
-  useEffect(() => {
-    // Slow countdown: decrease by 1 every 3-5 minutes randomly
-    const interval = setInterval(() => {
-      setRemaining((prev) => {
-        if (prev <= 12) return prev;
-        return prev - 1;
-      });
-    }, Math.random() * 120000 + 180000); // 3-5 min
-    return () => clearInterval(interval);
-  }, []);
+  const { connected, remaining } = useScarcity();
 
   return (
     <motion.section
@@ -29,7 +18,7 @@ export function PricingBlock() {
       transition={{ duration: 0.7 }}
       className="px-5 py-12 max-w-xl mx-auto text-center"
     >
-      <p className="font-[var(--font-inter)] text-zinc-400 text-sm mb-6">
+      <p className="font-[var(--font-inter)] text-zinc-400 text-base mb-6">
         La verdad es dura:{" "}
         <span className="text-[#9B111E] font-bold">
           si sientes que necesitas este test, probablemente ya estas en el Plan B.
@@ -69,21 +58,36 @@ export function PricingBlock() {
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             <span className="text-zinc-400 font-[var(--font-inter)]">
-              Usuarias conectadas: <span className="text-white font-semibold">37</span>
+              Usuarias conectadas:{" "}
+              <motion.span
+                key={connected}
+                initial={{ scale: 1.4, color: "#22c55e" }}
+                animate={{ scale: 1, color: "#ffffff" }}
+                transition={{ duration: 0.6 }}
+                className="font-semibold inline-block"
+              >
+                {connected}
+              </motion.span>
             </span>
           </div>
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-3.5 h-3.5 text-[#9B111E]" />
             <span className="text-[#9B111E] font-semibold font-[var(--font-mono)]">
-              Accesos restantes: {remaining}
+              Accesos restantes:{" "}
+              <motion.span
+                key={remaining}
+                initial={{ scale: 1.4, color: "#ef4444" }}
+                animate={{ scale: 1, color: "#9B111E" }}
+                transition={{ duration: 0.6 }}
+                className="inline-block"
+              >
+                {remaining}
+              </motion.span>
             </span>
           </div>
         </div>
 
-        <a
-          href={CTA_URL}
-          className="block w-full"
-        >
+        <a href={CTA_URL} className="block w-full">
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}

@@ -74,7 +74,7 @@ export function AntidoteBlock() {
       className="px-5 py-12 max-w-xl mx-auto"
     >
       <div className="text-center mb-10">
-        <p className="font-[var(--font-inter)] text-zinc-500 text-sm mb-4">
+        <p className="font-[var(--font-inter)] text-zinc-500 text-base mb-4">
           La solucion no es &quot;esperar a que el cambie&quot;. La solucion no es leer otro libro de
           autoayuda. La solucion no es hablar con tus amigas que te dicen &quot;ya dejalo&quot; mientras
           tu sigues pegada al telefono.
@@ -89,7 +89,7 @@ export function AntidoteBlock() {
         >
           No Mas Migajas™
         </h2>
-        <p className="font-[var(--font-inter)] text-zinc-400 text-sm">
+        <p className="font-[var(--font-inter)] text-zinc-400 text-base">
           Un Software de Rescate Emocional que hackea tu autocontrol cuando tu fuerza de voluntad no
           alcanza.
         </p>
@@ -124,7 +124,7 @@ export function AntidoteBlock() {
               </div>
 
               {feature.description && (
-                <p className="font-[var(--font-inter)] text-zinc-400 text-sm leading-relaxed">
+                <p className="font-[var(--font-inter)] text-zinc-400 text-base leading-relaxed">
                   {feature.description}
                 </p>
               )}
@@ -133,7 +133,7 @@ export function AntidoteBlock() {
                 <div className="space-y-3 mt-2">
                   {feature.modes.map((mode, j) => (
                     <div key={j} className="pl-3" style={{ borderLeft: "2px solid rgba(155, 17, 30, 0.4)" }}>
-                      <p className="font-[var(--font-inter)] text-sm">
+                      <p className="font-[var(--font-inter)] text-base">
                         <span className="text-white font-semibold">→ {mode.label}:</span>{" "}
                         <span className="text-zinc-400">{mode.text}</span>
                       </p>

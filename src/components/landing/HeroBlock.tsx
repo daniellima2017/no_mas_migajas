@@ -11,7 +11,7 @@ export function HeroBlock() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7 }}
-      className="px-5 py-12 text-center max-w-2xl mx-auto"
+      className="px-5 py-8 text-center max-w-2xl mx-auto"
     >
       <h1
         className="font-[var(--font-michroma)] text-2xl md:text-4xl leading-tight font-bold mb-8"
@@ -33,21 +33,21 @@ export function HeroBlock() {
           }}
         >
           <Image
-            src="/mockup.png"
+            src="/mockup2.png"
             alt="No Mas Migajas - App con Inteligencia Artificial"
-            width={320}
-            height={640}
-            className="w-[280px] md:w-[320px] h-auto"
+            width={400}
+            height={800}
+            className="w-[340px] md:w-[400px] h-auto"
             priority
           />
         </div>
       </div>
 
-      <p className="text-[10px] uppercase tracking-widest text-zinc-600 font-[var(--font-mono)] mb-6">
+      <p className="text-xs uppercase tracking-widest text-zinc-600 font-[var(--font-mono)] mb-6">
         Mini-App con Inteligencia Artificial
       </p>
 
-      <p className="font-[var(--font-inter)] text-zinc-400 text-base md:text-lg leading-relaxed mb-8">
+      <p className="font-[var(--font-inter)] text-zinc-400 text-lg md:text-xl leading-relaxed mb-8">
         Mas de 12,400 mujeres ya descubrieron su{" "}
         <span className="text-[#D4AF37] font-semibold">Indice de Migajas™</span> y
         dejaron de mendigar atencion de un hombre que las tiene como Plan B. Hoy

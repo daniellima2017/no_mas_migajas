@@ -66,7 +66,7 @@ export function FAQBlock() {
                 onClick={() => setOpenIndex(isOpen ? null : i)}
                 className="w-full flex items-center justify-between p-4 text-left"
               >
-                <span className="font-[var(--font-inter)] text-sm text-zinc-300 pr-4 font-medium">
+                <span className="font-[var(--font-inter)] text-base text-zinc-300 pr-4 font-medium">
                   {faq.q}
                 </span>
                 <motion.div
@@ -87,7 +87,7 @@ export function FAQBlock() {
                     className="overflow-hidden"
                   >
                     <div className="px-4 pb-4">
-                      <p className="font-[var(--font-inter)] text-zinc-500 text-sm leading-relaxed">
+                      <p className="font-[var(--font-inter)] text-zinc-500 text-base leading-relaxed">
                         {faq.a}
                       </p>
                     </div>
