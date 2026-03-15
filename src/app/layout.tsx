@@ -64,6 +64,27 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator && !window.__swFixed) {
+                window.__swFixed = true;
+                caches.keys().then(function(names) {
+                  var hasOld = names.some(function(n) { return n.indexOf('v1') !== -1 || n.indexOf('v2') !== -1 || n.indexOf('v3') !== -1; });
+                  if (hasOld) {
+                    Promise.all(names.map(function(n) { return caches.delete(n); })).then(function() {
+                      navigator.serviceWorker.getRegistrations().then(function(regs) {
+                        Promise.all(regs.map(function(r) { return r.unregister(); })).then(function() {
+                          window.location.reload();
+                        });
+                      });
+                    });
+                  }
+                });
+              }
+            `,
+          }}
+        />
       </head>
       <body
         className={`${exo2.variable} ${jetbrainsMono.variable} antialiased`}
