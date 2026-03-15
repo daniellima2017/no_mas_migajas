@@ -203,11 +203,11 @@ export default function QuizPage() {
   const totalQuestions = QUIZ_QUESTIONS.length;
 
   return (
-    <div className="min-h-screen bg-bg-primary flex flex-col items-center justify-start pt-3 pb-24 px-3">
+    <div className="min-h-screen bg-bg-primary flex flex-col items-center justify-start pt-5 pb-6 px-4">
       <img
         src="/logo.gif"
         alt="No Mas Migajas"
-        className="w-20 h-auto mb-1"
+        className="w-36 h-auto mb-3"
       />
       <AnimatePresence mode="wait">
         {quizState === "quiz" && !showMiniLoading && (
@@ -216,7 +216,7 @@ export default function QuizPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="w-full space-y-4 md:space-y-8"
+            className="w-full space-y-3 md:space-y-8"
           >
             <QuizProgress current={currentStep + 1} total={totalQuestions} />
             <QuizQuestion

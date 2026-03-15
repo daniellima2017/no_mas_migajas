@@ -229,17 +229,23 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
     <div className="w-full max-w-2xl mx-auto space-y-4 md:space-y-6">
       {/* Question header */}
       <div
-        className="text-center space-y-2 md:space-y-3 p-4 md:p-6 rounded-2xl"
+        className="text-center space-y-2 md:space-y-3 py-5 px-5 md:p-8 rounded-2xl relative overflow-hidden"
         style={{
-          background: "linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.06) 100%)",
-          border: "1px solid rgba(212, 175, 55, 0.4)",
-          boxShadow: "0 0 40px rgba(212, 175, 55, 0.12), inset 0 1px 0 rgba(212, 175, 55, 0.15)",
+          background: "linear-gradient(145deg, rgba(212, 175, 55, 0.18) 0%, rgba(212, 175, 55, 0.06) 50%, rgba(212, 175, 55, 0.1) 100%)",
+          border: "1px solid rgba(212, 175, 55, 0.45)",
+          boxShadow: "0 0 60px rgba(212, 175, 55, 0.15), 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(212, 175, 55, 0.2)",
         }}
       >
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.12) 0%, transparent 70%)",
+          }}
+        />
         <motion.p
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-accent-gold text-[0.65rem] md:text-xs uppercase tracking-[0.2em] font-bold"
+          className="text-accent-gold text-[0.7rem] md:text-xs uppercase tracking-[0.25em] font-bold relative"
         >
           {question.context}
         </motion.p>
@@ -247,9 +253,9 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-xl md:text-[1.7rem] font-extrabold text-white leading-snug"
+          className="text-[1.25rem] md:text-[1.7rem] font-extrabold text-white leading-tight relative"
           style={{
-            textShadow: "0 0 40px rgba(212, 175, 55, 0.2)",
+            textShadow: "0 0 40px rgba(212, 175, 55, 0.25), 0 2px 4px rgba(0, 0, 0, 0.3)",
           }}
         >
           {question.title}
@@ -257,7 +263,7 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
       </div>
 
       {/* Options */}
-      <div className="grid gap-2.5 md:gap-3">
+      <div className="grid gap-3 md:gap-3">
         {shuffledOptions.map((option, index) => {
           const isSelected = selectedId === option.id;
           const selectedStyles = isSelected ? getSelectedStyles(option) : null;
@@ -280,32 +286,32 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
               >
                 <div
                   className={`
-                    cursor-pointer p-3.5 md:p-4 rounded-xl transition-all duration-200
+                    cursor-pointer p-4 md:p-4 rounded-xl transition-all duration-200
                     ${selectedId && selectedId !== option.id ? "opacity-30" : ""}
                   `}
                   style={{
                     background: isSelected
                       ? selectedStyles!.bg
-                      : "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)",
+                      : "linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.04) 60%, rgba(212, 175, 55, 0.03) 100%)",
                     border: isSelected
                       ? `1px solid ${selectedStyles!.border}`
-                      : "1px solid rgba(255, 255, 255, 0.2)",
-                    boxShadow: isSelected ? selectedStyles!.glow : "0 2px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
+                      : "1px solid rgba(255, 255, 255, 0.18)",
+                    boxShadow: isSelected ? selectedStyles!.glow : "0 4px 20px rgba(0, 0, 0, 0.5), 0 0 1px rgba(212, 175, 55, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.08)",
                     backdropFilter: "blur(10px)",
                   }}
                   onClick={() => handleSelect(option.id)}
                   onMouseEnter={(e) => {
                     if (!selectedId) {
-                      e.currentTarget.style.borderColor = "rgba(212, 175, 55, 0.4)";
-                      e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)";
-                      e.currentTarget.style.boxShadow = "0 4px 16px rgba(212, 175, 55, 0.1)";
+                      e.currentTarget.style.borderColor = "rgba(212, 175, 55, 0.45)";
+                      e.currentTarget.style.background = "linear-gradient(145deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.06) 60%, rgba(212, 175, 55, 0.06) 100%)";
+                      e.currentTarget.style.boxShadow = "0 6px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1)";
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!selectedId) {
-                      e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
-                      e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)";
-                      e.currentTarget.style.boxShadow = "0 2px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)";
+                      e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.18)";
+                      e.currentTarget.style.background = "linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.04) 60%, rgba(212, 175, 55, 0.03) 100%)";
+                      e.currentTarget.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.5), 0 0 1px rgba(212, 175, 55, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.08)";
                     }
                   }}
                 >
@@ -316,12 +322,13 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
                       className="flex-shrink-0"
                     >
                       <div
-                        className="w-9 h-9 md:w-10 md:h-10 rounded-lg flex items-center justify-center"
+                        className="w-10 h-10 md:w-10 md:h-10 rounded-xl flex items-center justify-center"
                         style={{
                           background: isSelected
                             ? "rgba(255, 255, 255, 0.15)"
-                            : "rgba(212, 175, 55, 0.12)",
-                          border: "1px solid rgba(212, 175, 55, 0.25)",
+                            : "linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.06) 100%)",
+                          border: "1px solid rgba(212, 175, 55, 0.3)",
+                          boxShadow: "0 0 12px rgba(212, 175, 55, 0.08)",
                         }}
                       >
                         <DynamicIcon name={option.icon} />
