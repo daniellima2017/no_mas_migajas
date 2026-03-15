@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { AlertTriangle, Zap } from "lucide-react";
 import { useScarcity } from "./ScarcityContext";
 
-const CTA_URL = "#"; // Replace with Hotmart checkout URL
+const CTA_URL = "https://pay.hotmart.com/D104918674A";
 
 export function PricingBlock() {
   const { connected, remaining } = useScarcity();
@@ -109,7 +109,7 @@ export function PricingBlock() {
           </div>
         </div>
 
-        <a href={CTA_URL} className="block w-full">
+        <a href={CTA_URL} target="_blank" rel="noopener noreferrer" className="block w-full">
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
