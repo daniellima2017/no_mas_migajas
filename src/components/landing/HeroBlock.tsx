@@ -35,8 +35,8 @@ export function HeroBlock() {
       >
         {/* Red glow behind mockup */}
         <div
-          className="absolute inset-0 m-auto w-[60%] h-[50%] rounded-full blur-[80px] opacity-40"
-          style={{ background: "radial-gradient(circle, #9B111E 0%, transparent 70%)" }}
+          className="absolute inset-0 m-auto w-[80%] h-[60%] rounded-full blur-[100px] opacity-75"
+          style={{ background: "radial-gradient(circle, #9B111E 0%, rgba(155, 17, 30, 0.5) 40%, transparent 70%)" }}
         />
         <Image
           src="/mockup2.png"
