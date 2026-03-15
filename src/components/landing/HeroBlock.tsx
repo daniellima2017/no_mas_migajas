@@ -44,7 +44,7 @@ export function HeroBlock() {
       </motion.div>
 
       <p className="text-xs uppercase tracking-widest text-zinc-500 font-[var(--font-mono)] mb-6">
-        Software de Rescate Emocional con IA
+        App de Rescate Emocional con IA
       </p>
 
       <p className="font-[var(--font-inter)] text-zinc-400 text-lg md:text-xl leading-relaxed mb-8">

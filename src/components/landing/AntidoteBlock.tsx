@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Search, Flame, Snowflake, Siren, BookOpen, Medal, BarChart3 } from "lucide-react";
 
@@ -73,6 +74,21 @@ export function AntidoteBlock() {
       transition={{ duration: 0.7 }}
       className="px-5 py-12 max-w-xl mx-auto"
     >
+      {/* Animated mockup */}
+      <motion.div
+        className="flex justify-center mb-8"
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <Image
+          src="/mockup2.png"
+          alt="No Mas Migajas - App de Rescate Emocional"
+          width={500}
+          height={1000}
+          className="w-[75vw] max-w-[380px] md:max-w-[420px] h-auto"
+        />
+      </motion.div>
+
       <div className="text-center mb-10">
         <p className="font-[var(--font-inter)] text-zinc-500 text-base mb-4">
           La solucion no es &quot;esperar a que el cambie&quot;. La solucion no es leer otro libro de
@@ -90,7 +106,7 @@ export function AntidoteBlock() {
           No Mas Migajas™
         </h2>
         <p className="font-[var(--font-inter)] text-zinc-400 text-base">
-          Un Software de Rescate Emocional que hackea tu autocontrol cuando tu fuerza de voluntad no
+          Un App de Rescate Emocional que hackea tu autocontrol cuando tu fuerza de voluntad no
           alcanza.
         </p>
       </div>
