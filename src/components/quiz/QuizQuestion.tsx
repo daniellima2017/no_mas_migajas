@@ -226,10 +226,10 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-6">
+    <div className="w-full max-w-2xl mx-auto space-y-3 md:space-y-6">
       {/* Question header */}
       <div
-        className="text-center space-y-3 p-6 rounded-2xl"
+        className="text-center space-y-1.5 md:space-y-3 p-3 md:p-6 rounded-2xl"
         style={{
           background: "linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.04) 100%)",
           border: "1px solid rgba(212, 175, 55, 0.3)",
@@ -247,7 +247,7 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-2xl md:text-[1.7rem] font-bold text-white leading-snug"
+          className="text-lg md:text-[1.7rem] font-bold text-white leading-snug"
           style={{
             textShadow: "0 0 40px rgba(212, 175, 55, 0.15)",
           }}
@@ -257,7 +257,7 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
       </div>
 
       {/* Options */}
-      <div className="grid gap-3">
+      <div className="grid gap-2 md:gap-3">
         {shuffledOptions.map((option, index) => {
           const isSelected = selectedId === option.id;
           const selectedStyles = isSelected ? getSelectedStyles(option) : null;
@@ -280,7 +280,7 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
               >
                 <div
                   className={`
-                    cursor-pointer p-4 rounded-xl transition-all duration-200
+                    cursor-pointer p-3 md:p-4 rounded-xl transition-all duration-200
                     ${selectedId && selectedId !== option.id ? "opacity-30" : ""}
                   `}
                   style={{
@@ -309,14 +309,14 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
                     }
                   }}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     <motion.div
                       animate={isSelected ? { scale: [1, 1.2, 1] } : {}}
                       transition={{ duration: 0.3 }}
                       className="flex-shrink-0"
                     >
                       <div
-                        className="w-10 h-10 rounded-lg flex items-center justify-center"
+                        className="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center"
                         style={{
                           background: isSelected
                             ? "rgba(255, 255, 255, 0.15)"
@@ -327,7 +327,7 @@ export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
                         <DynamicIcon name={option.icon} />
                       </div>
                     </motion.div>
-                    <p className="text-white text-sm md:text-base flex-1 font-semibold leading-relaxed">
+                    <p className="text-white text-xs md:text-base flex-1 font-semibold leading-snug md:leading-relaxed">
                       {option.text}
                     </p>
                   </div>
