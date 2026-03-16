@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { AlertTriangle, Zap } from "lucide-react";
 import { useScarcity } from "./ScarcityContext";
 
-const CTA_URL = "https://pay.hotmart.com/D104918674A";
+const CTA_URL = "https://pay.hotmart.com/D104918674A?checkoutMode=10";
 
 export function PricingBlock() {
   const { connected, remaining } = useScarcity();
