@@ -85,7 +85,12 @@ export async function GET(request: NextRequest) {
 
     const currentMonitoringState = monitoringStateResult.data as MonitoringDailyState | null;
     const monitoringHistory = (monitoringHistoryResult.data || []) as MonitoringDailyState[];
-    const journeyDay = Math.max(1, monitoringHistory.length);
+    const createdAt = userResult.data?.created_at ? new Date(userResult.data.created_at).getTime() : null;
+    const elapsedJourneyDays =
+      createdAt !== null
+        ? Math.max(1, Math.floor((now.getTime() - createdAt) / (1000 * 60 * 60 * 24)) + 1)
+        : 1;
+    const journeyDay = Math.max(elapsedJourneyDays, monitoringHistory.length);
     const monitoring = buildMonitoringSnapshot({
       streak: streakResult.data || null,
       relapses: relapsesResult.data || [],

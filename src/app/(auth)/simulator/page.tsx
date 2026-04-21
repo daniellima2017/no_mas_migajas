@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { SimulatorInput } from "@/components/simulator/SimulatorInput";
 import { SimulatorOutput } from "@/components/simulator/SimulatorOutput";
 import { PanicButton } from "@/components/simulator/PanicButton";
 import { EmotionalBrake } from "@/components/streak/EmotionalBrake";
 import { useSimulator } from "@/hooks/useSimulator";
-import { AlertTriangle, ArrowDownLeft, Send, Zap } from "lucide-react";
+import { AlertTriangle, ArrowDownLeft, Send, UserCircle2, Zap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
 
@@ -45,13 +46,29 @@ export default function SimulatorPage() {
   return (
     <div className="min-h-screen bg-bg-primary p-4 md:p-8">
       <div className="max-w-2xl mx-auto space-y-8">
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl md:text-3xl font-bold text-white">
-            Hielo Seco
-          </h1>
-          <p className="text-zinc-400 text-sm">
-            Modo critico de intervencion para cuando estas por reaccionar
-          </p>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 text-center space-y-2">
+            <h1 className="text-2xl md:text-3xl font-bold text-white">
+              Hielo Seco
+            </h1>
+            <p className="text-zinc-400 text-sm">
+              Modo critico de intervencion para cuando estas por reaccionar
+            </p>
+          </div>
+
+          <Link
+            href="/profile"
+            className="rounded-2xl px-3 py-2 text-zinc-300 transition-all duration-300"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.08)",
+            }}
+          >
+            <span className="flex items-center gap-2 text-sm">
+              <UserCircle2 className="w-4 h-4 text-accent-gold" />
+              Perfil
+            </span>
+          </Link>
         </div>
 
         <div className="space-y-6">
