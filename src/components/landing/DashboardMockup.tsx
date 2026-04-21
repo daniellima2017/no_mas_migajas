@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Flame, Trophy, TrendingUp } from "lucide-react";
 
 export function DashboardMockup() {
-  const [seconds, setSeconds] = useState(0);
+  const [seconds, setSeconds] = useState(432067);
   const [started, setStarted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -24,8 +24,6 @@ export function DashboardMockup() {
 
   useEffect(() => {
     if (!started) return;
-    // Count from a realistic number
-    setSeconds(432067); // ~5d 0h 1m 7s
     const interval = setInterval(() => {
       setSeconds((s) => s + 1);
     }, 1000);

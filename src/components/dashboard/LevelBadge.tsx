@@ -85,7 +85,6 @@ function getNextLevel(streakSeconds: number): LevelConfig | null {
 export function LevelBadge({ streakSeconds }: LevelBadgeProps) {
   const currentLevel = getLevel(streakSeconds);
   const nextLevel = getNextLevel(streakSeconds);
-  const IconComponent = currentLevel.icon;
 
   const progressToNext = nextLevel
     ? Math.min(100, ((streakSeconds - currentLevel.minSeconds) / (nextLevel.minSeconds - currentLevel.minSeconds)) * 100)

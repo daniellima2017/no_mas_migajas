@@ -6,7 +6,7 @@ interface AuthGuardProps {
   allowBeforeOnboarding?: boolean;
 }
 
-export async function AuthGuard({ children, allowBeforeOnboarding = false }: AuthGuardProps) {
+export async function AuthGuard({ children }: AuthGuardProps) {
   const session = await getSession();
 
   if (!session.user_id) {
@@ -15,10 +15,6 @@ export async function AuthGuard({ children, allowBeforeOnboarding = false }: Aut
 
   if (session.subscription_status === "inactive") {
     redirect("/access-expired");
-  }
-
-  if (!session.onboarding_completed && !allowBeforeOnboarding) {
-    redirect("/quiz");
   }
 
   return <>{children}</>;

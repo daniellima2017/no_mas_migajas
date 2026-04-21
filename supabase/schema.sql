@@ -74,7 +74,22 @@ CREATE TABLE public.journal_entries (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 8. Elite advices table
+-- 8. Monitoring daily states table
+CREATE TABLE public.monitoring_daily_states (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  state_date DATE NOT NULL,
+  vulnerability TEXT NOT NULL,
+  risk_percent INTEGER NOT NULL,
+  pattern_label TEXT NOT NULL,
+  mission_key TEXT NOT NULL,
+  mission_completed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, state_date)
+);
+
+-- 9. Elite advices table
 CREATE TABLE public.elite_advices (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   medal_type TEXT UNIQUE NOT NULL,
@@ -82,7 +97,7 @@ CREATE TABLE public.elite_advices (
   content TEXT NOT NULL
 );
 
--- 9. API error logs table
+-- 10. API error logs table
 CREATE TABLE public.api_error_logs (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   provider TEXT NOT NULL,
@@ -90,7 +105,7 @@ CREATE TABLE public.api_error_logs (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 10. Webhook events table
+-- 11. Webhook events table
 CREATE TABLE public.webhook_events (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   event_id TEXT UNIQUE NOT NULL,
@@ -110,6 +125,8 @@ CREATE INDEX idx_simulator_logs_user_id ON public.simulator_logs(user_id);
 CREATE INDEX idx_simulator_logs_created_at ON public.simulator_logs(created_at DESC);
 CREATE INDEX idx_journal_entries_user_id ON public.journal_entries(user_id);
 CREATE INDEX idx_journal_entries_created_at ON public.journal_entries(created_at DESC);
+CREATE INDEX idx_monitoring_daily_states_user_id ON public.monitoring_daily_states(user_id);
+CREATE INDEX idx_monitoring_daily_states_state_date ON public.monitoring_daily_states(state_date DESC);
 CREATE INDEX idx_api_error_logs_provider ON public.api_error_logs(provider);
 CREATE INDEX idx_api_error_logs_created_at ON public.api_error_logs(created_at DESC);
 CREATE INDEX idx_webhook_events_event_type ON public.webhook_events(event_type);
@@ -127,6 +144,7 @@ ALTER TABLE public.relapses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.medals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.simulator_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.journal_entries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.monitoring_daily_states ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.elite_advices ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.api_error_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.webhook_events ENABLE ROW LEVEL SECURITY;
@@ -166,6 +184,11 @@ CREATE POLICY "own_data" ON public.journal_entries
   FOR ALL
   USING (auth.uid() = user_id);
 
+-- Monitoring daily states: own_data policy
+CREATE POLICY "own_data" ON public.monitoring_daily_states
+  FOR ALL
+  USING (auth.uid() = user_id);
+
 -- Elite advices: read_all policy (authenticated users can read)
 CREATE POLICY "read_all" ON public.elite_advices
   FOR SELECT
@@ -193,6 +216,12 @@ $$;
 -- Trigger: update_updated_at on users table
 CREATE TRIGGER trigger_update_updated_at
   BEFORE UPDATE ON public.users
+  FOR EACH ROW
+  EXECUTE FUNCTION public.update_updated_at();
+
+-- Trigger: update_updated_at on monitoring_daily_states table
+CREATE TRIGGER trigger_update_monitoring_daily_states_updated_at
+  BEFORE UPDATE ON public.monitoring_daily_states
   FOR EACH ROW
   EXECUTE FUNCTION public.update_updated_at();
 
@@ -225,6 +254,7 @@ CREATE INDEX idx_relapses_user ON public.relapses(user_id, created_at DESC);
 CREATE INDEX idx_medals_user ON public.medals(user_id);
 CREATE INDEX idx_simulator_logs_user ON public.simulator_logs(user_id, created_at DESC);
 CREATE INDEX idx_journal_entries_user ON public.journal_entries(user_id, created_at DESC);
+CREATE INDEX idx_monitoring_daily_states_user ON public.monitoring_daily_states(user_id, state_date DESC);
 
 -- Indexes for error tracking and webhook processing
 CREATE INDEX idx_api_errors_created ON public.api_error_logs(created_at DESC);

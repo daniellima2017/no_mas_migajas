@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, BookOpen, MessageSquare, Trophy, User } from "lucide-react";
+import { Home, BookOpen, MessageSquare, LineChart, User } from "lucide-react";
 
 interface TabItem {
   href: string;
@@ -14,9 +14,9 @@ interface TabItem {
 
 const TABS: TabItem[] = [
   { href: "/dashboard", icon: Home, label: "Inicio" },
-  { href: "/journal", icon: BookOpen, label: "Diario" },
+  { href: "/progress", icon: LineChart, label: "Progreso" },
   { href: "/simulator", icon: MessageSquare, label: "Simulador", isFAB: true },
-  { href: "/achievements", icon: Trophy, label: "Logros" },
+  { href: "/journal", icon: BookOpen, label: "Diario" },
   { href: "/profile", icon: User, label: "Perfil" },
 ];
 
@@ -36,7 +36,9 @@ export function BottomTabBar() {
       >
         <div className="flex items-center justify-around h-16 max-w-md mx-auto px-4">
           {TABS.map((tab) => {
-            const isActive = pathname === tab.href;
+            const isActive =
+              pathname === tab.href ||
+              (tab.href === "/progress" && pathname === "/achievements");
             const IconComponent = tab.icon;
 
             if (tab.isFAB) {

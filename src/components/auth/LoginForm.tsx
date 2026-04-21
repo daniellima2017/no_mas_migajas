@@ -48,11 +48,7 @@ export function LoginForm() {
         return;
       }
 
-      if (data.user?.onboarding_completed) {
-        router.push("/dashboard");
-      } else {
-        router.push("/quiz");
-      }
+      router.push("/dashboard");
     } catch {
       setError("Error de conexion. Intenta nuevamente.");
     } finally {

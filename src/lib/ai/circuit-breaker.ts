@@ -3,10 +3,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 const ERROR_THRESHOLD = 3;
 const ERROR_WINDOW_MINUTES = 5;
 
-interface ErrorCount {
-  count: number;
-}
-
 export async function shouldUseFallback(): Promise<boolean> {
   const supabase = createAdminClient();
 

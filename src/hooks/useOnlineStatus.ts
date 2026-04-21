@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 interface UseOnlineStatusReturn {
   isOnline: boolean;
@@ -31,10 +31,5 @@ export function useOnlineStatus(): UseOnlineStatusReturn {
       window.removeEventListener("offline", handleOffline);
     };
   }, []);
-
-  const resetWasOffline = useCallback(() => {
-    setWasOffline(false);
-  }, []);
-
   return { isOnline, wasOffline };
 }

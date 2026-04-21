@@ -39,7 +39,7 @@ export function FakeLoading({ onComplete }: FakeLoadingProps) {
       clearInterval(phraseInterval);
       clearTimeout(completionTimeout);
     };
-  }, [onComplete]);
+  }, [onComplete, totalDuration]);
 
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[300px] space-y-8">

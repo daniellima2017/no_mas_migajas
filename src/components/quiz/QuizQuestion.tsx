@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Shield,
@@ -209,11 +209,10 @@ function getSelectedStyles(option: QuizOption): { border: string; bg: string; gl
 
 export function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [shuffledOptions, setShuffledOptions] = useState(question.options);
-
-  useEffect(() => {
-    setShuffledOptions(shuffleArray(question.options));
-  }, [question.options]);
+  const shuffledOptions = useMemo(
+    () => shuffleArray(question.options),
+    [question.id, question.options]
+  );
 
   const handleSelect = (optionId: string) => {
     if (selectedId) return;

@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, Eye, EyeOff, ArrowDownLeft, Send, ShieldAlert, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, ShieldAlert, ShieldCheck } from "lucide-react";
 import { GlitchEffect } from "./GlitchEffect";
 
 interface SimulatorOutputProps {

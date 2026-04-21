@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Home, MessageSquare, Trophy, BookOpen, User } from "lucide-react";
+import { Home, MessageSquare, LineChart, BookOpen, User } from "lucide-react";
 
 interface RailItem {
   href: string;
@@ -13,9 +13,9 @@ interface RailItem {
 
 const RAIL_ITEMS: RailItem[] = [
   { href: "/dashboard", icon: Home, label: "Inicio" },
+  { href: "/progress", icon: LineChart, label: "Progreso" },
   { href: "/simulator", icon: MessageSquare, label: "Simulador" },
   { href: "/journal", icon: BookOpen, label: "Diario" },
-  { href: "/achievements", icon: Trophy, label: "Logros" },
   { href: "/profile", icon: User, label: "Perfil" },
 ];
 
@@ -26,7 +26,9 @@ export function SidebarRail() {
     <aside className="fixed left-0 top-0 bottom-0 z-40 hidden lg:flex flex-col items-center py-6 w-16 bg-bg-primary border-r border-zinc-800/50">
       <div className="flex flex-col items-center gap-2 mt-16">
         {RAIL_ITEMS.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive =
+            pathname === item.href ||
+            (item.href === "/progress" && pathname === "/achievements");
           const IconComponent = item.icon;
 
           return (

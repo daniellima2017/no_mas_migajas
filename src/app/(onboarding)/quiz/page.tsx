@@ -137,7 +137,7 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
   const [showMiniLoading, setShowMiniLoading] = useState(false);
 
-  const [questions, setQuestions] = useState(() => {
+  const [questions] = useState(() => {
     const isRetake = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("retake");
 
     // Retake: clear stored questions and select new ones
@@ -213,12 +213,6 @@ export default function QuizPage() {
     }
   }, [showMiniLoading]);
 
-  useEffect(() => {
-    if (cooldownUntil) {
-      setQuizState("cooldown");
-    }
-  }, [cooldownUntil]);
-
   const handleFakeLoadingComplete = useCallback(async () => {
     const success = await submitQuiz(answers);
     if (success) {
@@ -228,6 +222,7 @@ export default function QuizPage() {
 
   const currentQuestion = questions[currentStep];
   const totalQuestions = questions.length;
+  const effectiveQuizState: QuizState = cooldownUntil ? "cooldown" : quizState;
 
   return (
     <div className="min-h-screen bg-bg-primary flex flex-col items-center justify-start pt-5 pb-6 px-4">
@@ -237,7 +232,7 @@ export default function QuizPage() {
         className="w-36 h-auto mb-3"
       />
       <AnimatePresence mode="wait">
-        {quizState === "quiz" && !showMiniLoading && (
+        {effectiveQuizState === "quiz" && !showMiniLoading && (
           <motion.div
             key="quiz"
             initial={{ opacity: 0 }}
@@ -258,7 +253,7 @@ export default function QuizPage() {
           <MiniLoading />
         )}
 
-        {quizState === "fake-loading" && (
+        {effectiveQuizState === "fake-loading" && (
           <motion.div
             key="fake-loading"
             initial={{ opacity: 0 }}
@@ -269,7 +264,7 @@ export default function QuizPage() {
           </motion.div>
         )}
 
-        {quizState === "cooldown" && cooldownUntil && (
+        {effectiveQuizState === "cooldown" && cooldownUntil && (
           <motion.div
             key="cooldown"
             initial={{ opacity: 0 }}
@@ -283,7 +278,7 @@ export default function QuizPage() {
           </motion.div>
         )}
 
-        {quizState === "result" && result && (
+        {effectiveQuizState === "result" && result && (
           <motion.div
             key="result"
             initial={{ opacity: 0 }}

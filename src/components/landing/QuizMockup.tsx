@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const QUESTIONS = [
@@ -33,6 +33,22 @@ export function QuizMockup() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [hasPlayed, setHasPlayed] = useState(false);
 
+  const runSequence = useCallback(() => {
+    const steps: { phase: Phase; delay: number }[] = [
+      { phase: "q1", delay: 600 },
+      { phase: "a1", delay: 2000 },
+      { phase: "q2", delay: 3200 },
+      { phase: "a2", delay: 4400 },
+      { phase: "q3", delay: 5600 },
+      { phase: "a3", delay: 6800 },
+      { phase: "processing", delay: 8000 },
+      { phase: "result", delay: 10000 },
+    ];
+    steps.forEach(({ phase: nextPhase, delay }) => {
+      setTimeout(() => setPhase(nextPhase), delay);
+    });
+  }, []);
+
   useEffect(() => {
     if (hasPlayed) return;
 
@@ -49,23 +65,7 @@ export function QuizMockup() {
     const el = document.getElementById("quiz-mockup");
     if (el) observer.observe(el);
     return () => observer.disconnect();
-  }, [hasPlayed]);
-
-  function runSequence() {
-    const steps: { phase: Phase; delay: number }[] = [
-      { phase: "q1", delay: 600 },
-      { phase: "a1", delay: 2000 },
-      { phase: "q2", delay: 3200 },
-      { phase: "a2", delay: 4400 },
-      { phase: "q3", delay: 5600 },
-      { phase: "a3", delay: 6800 },
-      { phase: "processing", delay: 8000 },
-      { phase: "result", delay: 10000 },
-    ];
-    steps.forEach(({ phase: p, delay }) => {
-      setTimeout(() => setPhase(p), delay);
-    });
-  }
+  }, [hasPlayed, runSequence]);
 
   const currentQ =
     phase === "q1" || phase === "a1" ? 0 : phase === "q2" || phase === "a2" ? 1 : 2;

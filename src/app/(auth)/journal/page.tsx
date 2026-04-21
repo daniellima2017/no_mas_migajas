@@ -12,7 +12,6 @@ import {
   Calendar,
   ChevronDown,
   ChevronUp,
-  Trash2,
   Loader2,
 } from "lucide-react";
 import type { JournalEntry } from "@/types";
@@ -91,7 +90,6 @@ export default function JournalPage() {
   const {
     entryId,
     feedback,
-    isSaving,
     isLoadingFeedback,
     error,
     history,
@@ -148,11 +146,11 @@ export default function JournalPage() {
           <div className="flex items-center justify-center gap-2">
             <BookOpen className="w-6 h-6 text-accent-gold" />
             <h1 className="text-2xl md:text-3xl font-bold text-white">
-              Diario de Abstinencia
+              Diario + IA
             </h1>
           </div>
           <p className="text-zinc-400 text-sm">
-            Un espacio seguro para procesar tus emociones
+            Descarga lo que sientes y deja que el sistema te devuelva una lectura mas clara
           </p>
         </div>
 

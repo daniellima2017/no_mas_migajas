@@ -1,25 +1,5 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Michroma, Inter, JetBrains_Mono } from "next/font/google";
-
-const michroma = Michroma({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-michroma",
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "No Mas Migajas™ — Software de Rescate Emocional",
@@ -39,9 +19,7 @@ export default function LandingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className={`${michroma.variable} ${inter.variable} ${jetbrainsMono.variable} min-h-screen bg-[#070709] text-white antialiased`}
-    >
+    <div className="min-h-screen bg-[#070709] text-white antialiased">
       <Script id="meta-pixel" strategy="afterInteractive">
         {`
           !function(f,b,e,v,n,t,s)

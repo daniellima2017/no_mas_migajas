@@ -58,6 +58,11 @@
 }
 
 :root {
+  --font-exo2: "Segoe UI", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  --font-jetbrains: "Consolas", "SFMono-Regular", "Liberation Mono", ui-monospace, monospace;
+  --font-inter: "Segoe UI", Arial, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Consolas", "SFMono-Regular", "Liberation Mono", ui-monospace, monospace;
+  --font-michroma: "Arial Black", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
   --background: #0a0a0f;
   --foreground: #f0f0f0;
   --card: rgba(255, 255, 255, 0.03);

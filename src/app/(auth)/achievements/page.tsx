@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { RefreshCw, AlertTriangle, Trophy, BarChart3, History } from "lucide-react";
+import { AlertTriangle, BarChart3, History, LineChart, ShieldCheck } from "lucide-react";
 import { MedalGrid } from "@/components/achievements/MedalGrid";
 import { TriggerChart } from "@/components/achievements/TriggerChart";
 import { RelapseHistory } from "@/components/achievements/RelapseHistory";
@@ -85,10 +85,16 @@ export default function AchievementsPage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 text-accent-gold"
+            className="space-y-3"
           >
-            <Trophy className="w-6 h-6" />
-            <h1 className="text-2xl font-bold text-white">Tus Victorias</h1>
+            <div className="inline-flex items-center gap-2 text-accent-gold">
+              <LineChart className="w-6 h-6" />
+              <h1 className="text-2xl font-bold text-white">Tu Progreso</h1>
+            </div>
+            <p className="text-zinc-400 text-sm max-w-xl mx-auto leading-relaxed">
+              Aqui no solo ves logros. Ves evidencia de como cambia tu patron, que
+              lo activa y donde sigues necesitando mas proteccion.
+            </p>
           </motion.div>
         </header>
 
@@ -96,6 +102,35 @@ export default function AchievementsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          <div className="bg-bg-card border border-border-default rounded-xl p-6">
+            <div className="flex items-center gap-2 mb-3">
+              <ShieldCheck className="w-5 h-5 text-accent-gold" />
+              <h2 className="text-white font-semibold">Lo que ya estas sosteniendo</h2>
+            </div>
+            <p className="text-zinc-300 text-sm leading-relaxed">
+              Cada medalla representa tiempo real en el que no obedeciste el mismo impulso.
+              No es decoracion: es prueba de control acumulado.
+            </p>
+          </div>
+
+          <div className="bg-bg-card border border-border-default rounded-xl p-6">
+            <div className="flex items-center gap-2 mb-3">
+              <BarChart3 className="w-5 h-5 text-accent-gold" />
+              <h2 className="text-white font-semibold">Lo que tu sistema sigue mostrando</h2>
+            </div>
+            <p className="text-zinc-300 text-sm leading-relaxed">
+              Tus gatillos, horarios y recaidas no estan aqui para juzgarte. Estan aqui
+              para convertir reaccion en informacion util.
+            </p>
+          </div>
+        </motion.section>
+
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.16 }}
           className="bg-bg-card border border-border-default rounded-xl p-6"
         >
           <MedalGrid medals={data?.medals || []} />
@@ -103,7 +138,7 @@ export default function AchievementsPage() {
 
         <header className="flex items-center gap-2 pt-4">
           <BarChart3 className="w-5 h-5 text-zinc-400" />
-          <h2 className="text-lg font-semibold text-white">Analisis de Gatillos</h2>
+          <h2 className="text-lg font-semibold text-white">Patrones y Gatillos</h2>
         </header>
 
         <motion.section

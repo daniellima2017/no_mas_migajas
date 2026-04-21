@@ -7,7 +7,7 @@ import { SimulatorOutput } from "@/components/simulator/SimulatorOutput";
 import { PanicButton } from "@/components/simulator/PanicButton";
 import { EmotionalBrake } from "@/components/streak/EmotionalBrake";
 import { useSimulator } from "@/hooks/useSimulator";
-import { AlertTriangle, History, ArrowDownLeft, Send, Zap } from "lucide-react";
+import { AlertTriangle, ArrowDownLeft, Send, Zap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
 
@@ -24,7 +24,6 @@ export default function SimulatorPage() {
     reset,
   } = useSimulator();
 
-  const [showHistory, setShowHistory] = useState(false);
   const [showBrake, setShowBrake] = useState(false);
   const [brakeToast, setBrakeToast] = useState<string | null>(null);
 
@@ -51,7 +50,7 @@ export default function SimulatorPage() {
             Hielo Seco
           </h1>
           <p className="text-zinc-400 text-sm">
-            Simulador de traducion emocional
+            Modo critico de intervencion para cuando estas por reaccionar
           </p>
         </div>
 

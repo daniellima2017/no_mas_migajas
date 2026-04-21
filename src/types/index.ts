@@ -97,6 +97,47 @@ export interface TriggerPatterns {
   craving_threshold: number | null;
 }
 
+export type VulnerabilityLevel = "Alta" | "Media" | "Baja";
+
+export interface MonitoringSnapshot {
+  vulnerability: VulnerabilityLevel;
+  risk_percent: number;
+  journey_day: number;
+  journey_phase: string;
+  journey_title: string;
+  journey_message: string;
+  journey_focus_title: string;
+  journey_focus_body: string;
+  pattern_label: string;
+  pattern_description: string;
+  projected_behavior: string;
+  mission_key: string;
+  mission_date: string;
+  mission_title: string;
+  mission_body: string;
+  mission_completion_message: string;
+  behavior_proof: string;
+  victory_title: string;
+  victory_body: string;
+  identity_title: string;
+  identity_message: string;
+  support_message: string;
+  signal_summary: string;
+}
+
+export interface MonitoringDailyState {
+  id: string;
+  user_id: string;
+  state_date: string;
+  vulnerability: VulnerabilityLevel;
+  risk_percent: number;
+  pattern_label: string;
+  mission_key: string;
+  mission_completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface ApiErrorLog {
   id: string;
   provider: string;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface EmotionalBrakeProps {
@@ -44,8 +44,7 @@ function formatTime(totalSeconds: number): string {
 export function EmotionalBrake({ onContinue, onRecover }: EmotionalBrakeProps) {
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
   const [phraseIndex, setPhraseIndex] = useState(0);
-  const [showSkip, setShowSkip] = useState(false);
-  const [hasExited, setHasExited] = useState(false);
+  const hasExitedRef = useRef(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -61,14 +60,11 @@ export function EmotionalBrake({ onContinue, onRecover }: EmotionalBrakeProps) {
   }, []);
 
   useEffect(() => {
-    if (secondsLeft <= TOTAL_SECONDS - SKIP_DELAY_SECONDS) {
-      setShowSkip(true);
-    }
-    if (secondsLeft === 0 && !hasExited) {
-      setHasExited(true);
+    if (secondsLeft === 0 && !hasExitedRef.current) {
+      hasExitedRef.current = true;
       onContinue();
     }
-  }, [secondsLeft, hasExited, onContinue]);
+  }, [secondsLeft, onContinue]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -78,16 +74,18 @@ export function EmotionalBrake({ onContinue, onRecover }: EmotionalBrakeProps) {
   }, []);
 
   const handleRecover = useCallback(() => {
-    if (hasExited) return;
-    setHasExited(true);
+    if (hasExitedRef.current) return;
+    hasExitedRef.current = true;
     onRecover();
-  }, [hasExited, onRecover]);
+  }, [onRecover]);
 
   const handleContinue = useCallback(() => {
-    if (hasExited) return;
-    setHasExited(true);
+    if (hasExitedRef.current) return;
+    hasExitedRef.current = true;
     onContinue();
-  }, [hasExited, onContinue]);
+  }, [onContinue]);
+
+  const showSkip = secondsLeft <= TOTAL_SECONDS - SKIP_DELAY_SECONDS;
 
   return (
     <motion.div
