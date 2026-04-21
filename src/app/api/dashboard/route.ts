@@ -63,6 +63,9 @@ export async function GET(request: NextRequest) {
       state_date: initialMonitoring.mission_date,
       vulnerability: initialMonitoring.vulnerability,
       risk_percent: initialMonitoring.risk_percent,
+      detected_state: initialMonitoring.detected_state,
+      confidence_level: initialMonitoring.confidence_level,
+      crisis_mode: initialMonitoring.crisis_mode,
       pattern_label: initialMonitoring.pattern_label,
       mission_key: initialMonitoring.mission_key,
     };
@@ -82,7 +85,7 @@ export async function GET(request: NextRequest) {
 
     const currentMonitoringState = monitoringStateResult.data as MonitoringDailyState | null;
     const monitoringHistory = (monitoringHistoryResult.data || []) as MonitoringDailyState[];
-    const journeyDay = Math.min(7, Math.max(1, monitoringHistory.length));
+    const journeyDay = Math.max(1, monitoringHistory.length);
     const monitoring = buildMonitoringSnapshot({
       streak: streakResult.data || null,
       relapses: relapsesResult.data || [],
@@ -92,6 +95,7 @@ export async function GET(request: NextRequest) {
       journeyDayOverride: journeyDay,
       recentSimulatorUsageCount: recentSimulatorResult.count || 0,
       recentJournalUsageCount: recentJournalResult.count || 0,
+      monitoringHistory,
       now,
     });
     const streakSeconds = getStreakSecondsFromStartedAt(streakResult.data?.started_at || null, now);
@@ -110,6 +114,8 @@ export async function GET(request: NextRequest) {
       quizResult: quizResult.data || null,
       monitoring,
       missionCompletedAt: currentMonitoringState?.mission_completed_at || null,
+      ritualCompletedAt: currentMonitoringState?.ritual_completed_at || null,
+      ritualCheckinState: currentMonitoringState?.ritual_checkin_state || null,
       monitoringHistory,
     });
   } catch (error) {

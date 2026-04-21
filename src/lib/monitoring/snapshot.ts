@@ -1,4 +1,14 @@
-import type { QuizResult, Relapse, Streak, TriggerPatterns, MonitoringSnapshot, VulnerabilityLevel } from "@/types";
+import type {
+  QuizResult,
+  Relapse,
+  Streak,
+  TriggerPatterns,
+  MonitoringSnapshot,
+  VulnerabilityLevel,
+  MonitoringState,
+  MonitoringConfidenceLevel,
+  MonitoringDailyState,
+} from "@/types";
 
 interface MonitoringInputs {
   streak: Pick<Streak, "started_at"> | null;
@@ -9,6 +19,10 @@ interface MonitoringInputs {
   journeyDayOverride?: number;
   recentSimulatorUsageCount?: number;
   recentJournalUsageCount?: number;
+  monitoringHistory?: Pick<
+    MonitoringDailyState,
+    "state_date" | "risk_percent" | "pattern_label" | "mission_completed_at" | "ritual_completed_at" | "ritual_checkin_state" | "detected_state"
+  >[];
   now?: Date;
 }
 
@@ -43,10 +57,60 @@ function getJourneyDay(userCreatedAt: string | null | undefined, now: Date): num
   if (!userCreatedAt) return 1;
   const created = new Date(userCreatedAt).getTime();
   const elapsedDays = Math.floor((now.getTime() - created) / (1000 * 60 * 60 * 24));
-  return Math.min(7, Math.max(1, elapsedDays + 1));
+  return Math.max(1, elapsedDays + 1);
 }
 
 function getJourneySnapshot(journeyDay: number, vulnerability: VulnerabilityLevel) {
+  if (journeyDay <= 7) {
+    const snapshot = getFirstWeekJourneySnapshot(journeyDay, vulnerability);
+    return {
+      sectionTitle: "Primera semana",
+      badge: `Dia ${Math.min(journeyDay, 7)} de 7`,
+      ...snapshot,
+    };
+  }
+
+  if (journeyDay <= 21) {
+    return {
+      sectionTitle: "Consolidacion",
+      badge: `Dia ${journeyDay}`,
+      phase: "Consolidacion",
+      title: `Dia ${journeyDay}: ya no estas en choque, estas construyendo consistencia`,
+      message:
+        vulnerability === "Alta"
+          ? "La tension sigue apareciendo, pero ahora el sistema puede mostrarte si vuelves al automatismo o si sostienes la estructura incluso bajo presion."
+          : "Esta fase ya no se trata solo de sobrevivir al impulso. Se trata de repetir suficiente control como para que tu historia empiece a cambiar.",
+      focusTitle: "Prueba de hoy",
+      focusBody: "Registrar el estado, sostener la mision y dejar evidencia de una conducta que ya no repites igual.",
+    };
+  }
+
+  if (journeyDay <= 45) {
+    return {
+      sectionTitle: "Viraje de identidad",
+      badge: `Dia ${journeyDay}`,
+      phase: "Viraje de identidad",
+      title: `Dia ${journeyDay}: ya puedes notar lo que ya no te controla igual`,
+      message:
+        "A esta altura el cambio no se mide solo por ausencia de recaida. Se mide por lo que ya no necesita la misma explicacion, la misma urgencia ni el mismo rescate.",
+      focusTitle: "Prueba de hoy",
+      focusBody: "Reconocer una conducta que antes parecia inevitable y hoy ya no tiene el mismo poder sobre ti.",
+    };
+  }
+
+  return {
+    sectionTitle: "Mantenimiento consciente",
+    badge: `Dia ${journeyDay}`,
+    phase: "Mantenimiento consciente",
+    title: `Dia ${journeyDay}: el proceso ya no va solo de resistir, va de sostenerte`,
+    message:
+      "Lo valioso ahora es no romantizar la estabilidad. El sistema sigue aqui para evitar que una ventana de debilidad te haga olvidar todo lo que ya construiste.",
+    focusTitle: "Prueba de hoy",
+    focusBody: "Usar la claridad como mantenimiento: registrar, leer y proteger lo que ya te costo demasiado recuperar.",
+  };
+}
+
+function getFirstWeekJourneySnapshot(journeyDay: number, vulnerability: VulnerabilityLevel) {
   if (journeyDay === 1) {
     return {
       phase: "Choque y lectura",
@@ -115,6 +179,255 @@ function getJourneySnapshot(journeyDay: number, vulnerability: VulnerabilityLeve
     message: "Todavia no significa que todo este resuelto. Significa que ya puedes mirar esta semana y ver pruebas de una version tuya que no actua igual.",
     focusTitle: "Prueba de hoy",
     focusBody: "Reconocer que el cambio no esta en lo que prometes, sino en como ya empezaste a responder diferente.",
+  };
+}
+
+function getSeed(input: string): number {
+  let hash = 0;
+  for (let index = 0; index < input.length; index += 1) {
+    hash = (hash * 31 + input.charCodeAt(index)) % 2147483647;
+  }
+  return Math.abs(hash);
+}
+
+function pickVariant<T>(seed: number, options: T[]): T {
+  return options[seed % options.length];
+}
+
+function getDetectedState(riskPercent: number): MonitoringState {
+  if (riskPercent >= 70) return "vulnerable";
+  if (riskPercent >= 45) return "sensible";
+  return "estable";
+}
+
+function getConfidenceLevel({
+  relapseCount,
+  avgCraving,
+  recentSimulatorUsageCount,
+  recentJournalUsageCount,
+  nearCriticalHour,
+  quizScore,
+}: {
+  relapseCount: number;
+  avgCraving: number;
+  recentSimulatorUsageCount: number;
+  recentJournalUsageCount: number;
+  nearCriticalHour: boolean;
+  quizScore: number;
+}): MonitoringConfidenceLevel {
+  let signalCount = 0;
+  if (relapseCount > 0) signalCount += 1;
+  if (avgCraving > 0) signalCount += 1;
+  if (recentSimulatorUsageCount > 0) signalCount += 1;
+  if (recentJournalUsageCount > 0) signalCount += 1;
+  if (nearCriticalHour) signalCount += 1;
+  if (quizScore > 0) signalCount += 1;
+
+  if (signalCount >= 5) return "alta";
+  if (signalCount >= 3) return "media";
+  return "baja";
+}
+
+function getStateSnapshot(
+  detectedState: MonitoringState,
+  confidenceLevel: MonitoringConfidenceLevel,
+  crisisMode: boolean,
+  timeContext: TimeContext,
+  seed: number
+) {
+  if (crisisMode) {
+    const crisisVariant = pickVariant(seed, [
+      {
+        title: "Estas entrando en modo critico",
+        message:
+          "Esto no parece claridad. Parece urgencia buscando alivio rapido. Hoy conviene tratar este momento como intervencion, no como decision.",
+      },
+      {
+        title: "Hoy el sistema te lee en modo critico",
+        message:
+          "No es un momento para negociar contigo misma. Es un momento para bajar intensidad, frenar impulso y pasar por la intervencion.",
+      },
+    ]);
+    return {
+      ...crisisVariant,
+      ritualTitle: "Ritual de 30 segundos",
+      ritualBody:
+        "Antes de tocar el chat, marca como llegas hoy. El sistema ajusta la lectura y te empuja a la siguiente accion util.",
+    };
+  }
+
+  if (detectedState === "vulnerable") {
+    return {
+      ...pickVariant(seed, [
+        {
+          title: "Hoy estas vulnerable",
+          message:
+            "Tu sistema esta mas expuesto de lo normal y en este estado sueles reaccionar antes de pensar. Hoy importa mas la proteccion que la confianza.",
+        },
+        {
+          title: "Hoy llegas con el patron mas activo",
+          message:
+            "No hace falta tocar el detonante para saberlo. El sistema ve suficiente carga como para priorizar contencion antes que confianza.",
+        },
+      ]),
+      ritualTitle: "Ritual de 30 segundos",
+      ritualBody:
+        "Marca como llegas hoy y deja que el sistema te devuelva una lectura antes de abrir el detonante.",
+    };
+  }
+
+  if (detectedState === "sensible") {
+    const variants = timeContext === "night"
+      ? [
+          {
+            title: "Hoy estas mas sensible de lo normal",
+            message:
+              "No estas en crisis, pero esta franja suele reactivar pensamiento repetitivo y vigilancia silenciosa.",
+          },
+          {
+            title: "Hoy tu sensibilidad subio un poco",
+            message:
+              "La noche no te encuentra en crisis, pero si en una zona donde puedes volver a mirar o anticipar de mas.",
+          },
+        ]
+      : [
+          {
+            title: "Hoy estas mas sensible de lo normal",
+            message:
+              "No estas en crisis, pero hay señales de que tu patron puede activarse si bajas la guardia.",
+          },
+          {
+            title: "Hoy el sistema te lee mas reactiva",
+            message:
+              "No es un dia de alarma roja, pero si uno donde pequenos detonantes pueden volver a abrir el ciclo si entras en automatico.",
+          },
+        ];
+    return {
+      ...pickVariant(seed, variants),
+      ritualTitle: "Ritual de 30 segundos",
+      ritualBody:
+        "Haz un check-in rapido. Ese pequeño registro ayuda a que la lectura no se vuelva generica y te recuerda que hoy si importa entrar.",
+    };
+  }
+
+  return {
+    ...pickVariant(
+      seed,
+      confidenceLevel === "baja"
+        ? [
+            {
+              title: "Hoy estas relativamente estable",
+              message:
+                "El sistema no ve señales fuertes de riesgo, pero tampoco tiene suficiente evidencia para relajarse del todo.",
+            },
+            {
+              title: "Hoy no hay una alarma fuerte",
+              message:
+                "No se ve una carga clara, aunque todavia conviene registrar el dia para que la lectura no pierda precision.",
+            },
+          ]
+        : [
+            {
+              title: "Hoy llegas mas estable",
+              message:
+                "No significa que el patron desaparecio. Significa que hoy llega con menos fuerza y puedes usar esa ventana a tu favor.",
+            },
+            {
+              title: "Hoy tu sistema llega con mas aire",
+              message:
+                "No estas fuera del proceso, pero si en una franja donde la claridad pesa mas que la urgencia.",
+            },
+          ]
+    ),
+    ritualTitle: "Ritual de 30 segundos",
+    ritualBody:
+      "Incluso en dias estables conviene registrar como llegas. Esa continuidad es la que hace que el sistema recuerde tu proceso.",
+  };
+}
+
+function getMemorySnapshot(
+  history: Pick<
+    MonitoringDailyState,
+    "state_date" | "risk_percent" | "pattern_label" | "mission_completed_at" | "ritual_completed_at" | "ritual_checkin_state" | "detected_state"
+  >[],
+  currentRisk: number,
+  currentPattern: string,
+  seed: number
+) {
+  const previous = history.find((entry) => entry.state_date !== history[0]?.state_date) || null;
+
+  if (!previous) {
+    return {
+      title: "Hoy empieza tu memoria de proceso",
+      message:
+        "Todavia no hay un registro anterior para comparar. Lo que hagas hoy se convierte en el primer punto de referencia real del sistema.",
+    };
+  }
+
+  const riskDelta = previous.risk_percent - currentRisk;
+
+  if (previous.ritual_checkin_state === "vulnerable" && riskDelta >= 8) {
+    return pickVariant(seed, [
+      {
+        title: "Hoy llegas mejor que la ultima vez",
+        message: `En tu ultimo registro entraste vulnerable y con ${previous.risk_percent}% de riesgo. Hoy llegas ${riskDelta} puntos mas abajo.`,
+      },
+      {
+        title: "El sistema ya ve una diferencia concreta",
+        message: `La ultima vez entraste vulnerable. Hoy el riesgo baja frente a ese punto y eso ya cuenta como cambio observable.`,
+      },
+    ]);
+  }
+
+  if (previous.mission_completed_at) {
+    return pickVariant(seed, [
+      {
+        title: "Ayer dejaste evidencia util",
+        message:
+          "No vienes de cero. Ayer quedo una accion marcada y hoy el sistema la usa para leer si estas sosteniendo o soltando esa linea.",
+      },
+      {
+        title: "Tu proceso ya tiene una huella reciente",
+        message:
+          "Ayer hubo una accion completada. La pregunta de hoy no es empezar otra vez, sino ver si esa version tuya vuelve a aparecer.",
+      },
+    ]);
+  }
+
+  if (previous.pattern_label === currentPattern) {
+    return {
+      title: "El sistema detecta repeticion del mismo frente",
+      message:
+        "No es retroceso automatico. Es evidencia de que el mismo patron sigue buscando una entrada parecida y necesita una respuesta mas consciente.",
+    };
+  }
+
+  return {
+    title: "Tu proceso ya esta dejando contraste",
+    message: `La ultima vez dominaba ${previous.pattern_label.toLowerCase()}. Hoy el sistema lee ${currentPattern.toLowerCase()}. Ya no todos los dias se parecen entre si.`,
+  };
+}
+
+function getAbsenceAlert(
+  history: Pick<MonitoringDailyState, "state_date">[],
+  now: Date
+) {
+  const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
+  const hasYesterday = history.some((entry) => entry.state_date === yesterday);
+  const hasOlderData = history.some((entry) => entry.state_date < yesterday);
+
+  if (!hasYesterday && hasOlderData) {
+    return {
+      title: "Falta informacion de ayer",
+      body: "Cuando no registras tu estado, la lectura pierde precision y el sistema deja de comparar como cambias entre un dia y otro.",
+    };
+  }
+
+  return {
+    title: null,
+    body: null,
   };
 }
 
@@ -304,6 +617,7 @@ export function buildMonitoringSnapshot({
   journeyDayOverride,
   recentSimulatorUsageCount = 0,
   recentJournalUsageCount = 0,
+  monitoringHistory = [],
   now = new Date(),
 }: MonitoringInputs): MonitoringSnapshot {
   const streakSeconds = getStreakSeconds(streak?.started_at, now);
@@ -317,6 +631,13 @@ export function buildMonitoringSnapshot({
   const lastRelapseAt = relapses[0]?.created_at ?? null;
   const hoursSinceLastRelapse = getHoursSince(lastRelapseAt, now);
   const nearCriticalHour = isNearCriticalHour(mostCommonHour, now);
+  const seed = getSeed([
+    now.toISOString().slice(0, 10),
+    mostCommonReason,
+    String(relapseCount),
+    String(recentSimulatorUsageCount),
+    String(recentJournalUsageCount),
+  ].join(":"));
 
   let riskScore = 28;
 
@@ -343,6 +664,19 @@ export function buildMonitoringSnapshot({
   let vulnerability: VulnerabilityLevel = "Baja";
   if (riskPercent >= 75) vulnerability = "Alta";
   else if (riskPercent >= 50) vulnerability = "Media";
+  const detectedState = getDetectedState(riskPercent);
+  const confidenceLevel = getConfidenceLevel({
+    relapseCount,
+    avgCraving,
+    recentSimulatorUsageCount,
+    recentJournalUsageCount,
+    nearCriticalHour,
+    quizScore,
+  });
+  const crisisMode =
+    riskPercent >= 82 ||
+    recentSimulatorUsageCount >= 2 ||
+    (detectedState === "vulnerable" && nearCriticalHour && recentSimulatorUsageCount >= 1);
 
   const pattern = getPatternFromInputs(
     quizScore || null,
@@ -356,6 +690,9 @@ export function buildMonitoringSnapshot({
   const victory = getVictorySnapshot(vulnerability, streakSeconds);
   const identity = getIdentitySnapshot(vulnerability, streakSeconds);
   const journey = getJourneySnapshot(journeyDay, vulnerability);
+  const stateSnapshot = getStateSnapshot(detectedState, confidenceLevel, crisisMode, timeContext, seed);
+  const memorySnapshot = getMemorySnapshot(monitoringHistory, riskPercent, pattern.label, seed);
+  const absenceAlert = getAbsenceAlert(monitoringHistory, now);
   const missionDate = now.toISOString().slice(0, 10);
   const missionKey = [
     missionDate,
@@ -383,12 +720,25 @@ export function buildMonitoringSnapshot({
   return {
     vulnerability,
     risk_percent: riskPercent,
+    detected_state: detectedState,
+    confidence_level: confidenceLevel,
+    crisis_mode: crisisMode,
+    state_title: stateSnapshot.title,
+    state_message: stateSnapshot.message,
+    ritual_title: stateSnapshot.ritualTitle,
+    ritual_body: stateSnapshot.ritualBody,
     journey_day: journeyDay,
+    journey_section_title: journey.sectionTitle,
+    journey_badge: journey.badge,
     journey_phase: journey.phase,
     journey_title: journey.title,
     journey_message: journey.message,
     journey_focus_title: journey.focusTitle,
     journey_focus_body: journey.focusBody,
+    memory_title: memorySnapshot.title,
+    memory_message: memorySnapshot.message,
+    absence_alert_title: absenceAlert.title,
+    absence_alert_body: absenceAlert.body,
     pattern_label: pattern.label,
     pattern_description: pattern.description,
     projected_behavior: pattern.projectedBehavior,

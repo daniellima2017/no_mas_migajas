@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
       detectedState?: string;
       confidenceLevel?: string;
       crisisMode?: boolean;
+      ritualCheckinState?: string;
     };
 
     if (
@@ -28,9 +29,12 @@ export async function POST(request: NextRequest) {
       !body.missionKey ||
       !body.vulnerability ||
       typeof body.riskPercent !== "number" ||
-      !body.patternLabel
+      !body.patternLabel ||
+      !body.detectedState ||
+      !body.confidenceLevel ||
+      !body.ritualCheckinState
     ) {
-      return NextResponse.json({ error: "Datos incompletos para registrar la mision" }, { status: 400 });
+      return NextResponse.json({ error: "Datos incompletos para registrar el ritual" }, { status: 400 });
     }
 
     const supabase = createAdminClient();
@@ -43,29 +47,31 @@ export async function POST(request: NextRequest) {
           state_date: body.missionDate,
           vulnerability: body.vulnerability,
           risk_percent: body.riskPercent,
-          detected_state: body.detectedState || "sensible",
-          confidence_level: body.confidenceLevel || "media",
+          detected_state: body.detectedState,
+          confidence_level: body.confidenceLevel,
           crisis_mode: body.crisisMode || false,
           pattern_label: body.patternLabel,
           mission_key: body.missionKey,
-          mission_completed_at: new Date().toISOString(),
+          ritual_checkin_state: body.ritualCheckinState,
+          ritual_completed_at: new Date().toISOString(),
         },
         { onConflict: "user_id,state_date" }
       )
-      .select("mission_completed_at")
+      .select("ritual_completed_at, ritual_checkin_state")
       .single();
 
     if (error) {
-      console.error("Error al registrar mision:", error);
-      return NextResponse.json({ error: "No se pudo registrar la mision" }, { status: 500 });
+      console.error("Error al registrar ritual:", error);
+      return NextResponse.json({ error: "No se pudo registrar el ritual" }, { status: 500 });
     }
 
     return NextResponse.json({
       success: true,
-      missionCompletedAt: data?.mission_completed_at || null,
+      ritualCompletedAt: data?.ritual_completed_at || null,
+      ritualCheckinState: data?.ritual_checkin_state || null,
     });
   } catch (error) {
-    console.error("Error en monitoring mission API:", error);
+    console.error("Error en monitoring ritual API:", error);
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

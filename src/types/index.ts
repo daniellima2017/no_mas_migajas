@@ -98,16 +98,32 @@ export interface TriggerPatterns {
 }
 
 export type VulnerabilityLevel = "Alta" | "Media" | "Baja";
+export type MonitoringState = "estable" | "sensible" | "vulnerable";
+export type MonitoringConfidenceLevel = "alta" | "media" | "baja";
+export type RitualCheckinState = "estable" | "vulnerable";
 
 export interface MonitoringSnapshot {
   vulnerability: VulnerabilityLevel;
   risk_percent: number;
+  detected_state: MonitoringState;
+  confidence_level: MonitoringConfidenceLevel;
+  crisis_mode: boolean;
+  state_title: string;
+  state_message: string;
+  ritual_title: string;
+  ritual_body: string;
   journey_day: number;
+  journey_section_title: string;
+  journey_badge: string;
   journey_phase: string;
   journey_title: string;
   journey_message: string;
   journey_focus_title: string;
   journey_focus_body: string;
+  memory_title: string;
+  memory_message: string;
+  absence_alert_title: string | null;
+  absence_alert_body: string | null;
   pattern_label: string;
   pattern_description: string;
   projected_behavior: string;
@@ -131,8 +147,13 @@ export interface MonitoringDailyState {
   state_date: string;
   vulnerability: VulnerabilityLevel;
   risk_percent: number;
+  detected_state: MonitoringState;
+  confidence_level: MonitoringConfidenceLevel;
+  crisis_mode: boolean;
   pattern_label: string;
   mission_key: string;
+  ritual_checkin_state: RitualCheckinState | null;
+  ritual_completed_at: string | null;
   mission_completed_at: string | null;
   created_at: string;
   updated_at: string;

@@ -18,6 +18,7 @@ import {
   History,
   CalendarDays,
   Target,
+  UserCircle2,
 } from "lucide-react";
 import { LevelBadge } from "@/components/dashboard/LevelBadge";
 import { StreakTimer } from "@/components/dashboard/StreakTimer";
@@ -35,6 +36,7 @@ import type {
   QuizResult,
   MonitoringSnapshot,
   MonitoringDailyState,
+  RitualCheckinState,
 } from "@/types";
 
 interface DashboardData {
@@ -46,6 +48,8 @@ interface DashboardData {
   quizResult: QuizResult | null;
   monitoring: MonitoringSnapshot;
   missionCompletedAt: string | null;
+  ritualCompletedAt: string | null;
+  ritualCheckinState: RitualCheckinState | null;
   monitoringHistory: MonitoringDailyState[];
 }
 
@@ -59,6 +63,8 @@ export function DashboardClient() {
   const [showScrollHint, setShowScrollHint] = useState(true);
   const [missionCompletedAt, setMissionCompletedAt] = useState<string | null>(null);
   const [missionJustCompleted, setMissionJustCompleted] = useState(false);
+  const [ritualCompletedAt, setRitualCompletedAt] = useState<string | null>(null);
+  const [ritualCheckinState, setRitualCheckinState] = useState<RitualCheckinState | null>(null);
 
   const fetchDashboard = useCallback(async () => {
     setIsLoading(true);
@@ -83,6 +89,11 @@ export function DashboardClient() {
   useEffect(() => {
     setMissionCompletedAt(data?.missionCompletedAt || null);
   }, [data?.missionCompletedAt]);
+
+  useEffect(() => {
+    setRitualCompletedAt(data?.ritualCompletedAt || null);
+    setRitualCheckinState(data?.ritualCheckinState || null);
+  }, [data?.ritualCompletedAt, data?.ritualCheckinState]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -131,6 +142,9 @@ export function DashboardClient() {
             missionKey: data.monitoring.mission_key,
             vulnerability: data.monitoring.vulnerability,
             riskPercent: data.monitoring.risk_percent,
+            detectedState: data.monitoring.detected_state,
+            confidenceLevel: data.monitoring.confidence_level,
+            crisisMode: data.monitoring.crisis_mode,
             patternLabel: data.monitoring.pattern_label,
           }),
         });
@@ -151,6 +165,49 @@ export function DashboardClient() {
       }
     })();
   }, [data, missionCompletedAt, fetchDashboard]);
+
+  const handleRitualCheckin = useCallback(
+    (checkinState: RitualCheckinState) => {
+      if (!data?.monitoring || ritualCompletedAt) return;
+
+      void (async () => {
+        try {
+          const response = await fetch("/api/monitoring/ritual", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              missionDate: data.monitoring.mission_date,
+              missionKey: data.monitoring.mission_key,
+              vulnerability: data.monitoring.vulnerability,
+              riskPercent: data.monitoring.risk_percent,
+              detectedState: data.monitoring.detected_state,
+              confidenceLevel: data.monitoring.confidence_level,
+              crisisMode: data.monitoring.crisis_mode,
+              patternLabel: data.monitoring.pattern_label,
+              ritualCheckinState: checkinState,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            setToastError(errorData.error || "No se pudo registrar el ritual");
+            return;
+          }
+
+          const result = (await response.json()) as {
+            ritualCompletedAt?: string | null;
+            ritualCheckinState?: RitualCheckinState | null;
+          };
+          setRitualCompletedAt(result.ritualCompletedAt || new Date().toISOString());
+          setRitualCheckinState(result.ritualCheckinState || checkinState);
+          await fetchDashboard();
+        } catch {
+          setToastError("Error de conexión al registrar el ritual");
+        }
+      })();
+    },
+    [data, ritualCompletedAt, fetchDashboard]
+  );
 
   const calculateStreakSeconds = (): number => {
     if (!data?.streak?.started_at) return 0;
@@ -233,25 +290,20 @@ export function DashboardClient() {
     : monitoring.victory_body;
   const continuityRecord =
     data?.monitoringHistory.find((entry) => entry.state_date !== monitoring.mission_date) || null;
-  const continuityTitle = continuityRecord
-    ? continuityRecord.risk_percent > monitoring.risk_percent
-      ? "Hoy llegaste con mas control que en tu ultimo registro"
-      : continuityRecord.risk_percent < monitoring.risk_percent
-      ? "Hoy necesitas mas proteccion que en tu ultimo registro"
-      : "Hoy repites el mismo frente que en tu ultimo registro"
-    : "Hoy empieza el registro de tu proceso";
-  const continuityMessage = continuityRecord
-    ? continuityRecord.risk_percent > monitoring.risk_percent
-      ? `La ultima vez estabas en ${continuityRecord.risk_percent}% de riesgo con ${continuityRecord.pattern_label.toLowerCase()}. Hoy tu sistema sigue atento, pero ya llega con menos carga.`
-      : continuityRecord.risk_percent < monitoring.risk_percent
-      ? `La ultima vez estabas en ${continuityRecord.risk_percent}% de riesgo. Hoy subiste a ${monitoring.risk_percent}% y conviene tratar este momento como una fase delicada, no como una recaida inevitable.`
-      : `Tu riesgo sigue en una zona parecida a la ultima vez y el patron dominante vuelve a aparecer. Eso no es fracaso: es una señal de que el proceso sigue abierto y necesita continuidad.`
-    : "A partir de hoy el sistema empezara a recordar como llegas cada dia para mostrarte si avanzas, te estabilizas o entras en una zona mas vulnerable.";
   const continuityEvidence = continuityRecord
     ? continuityRecord.mission_completed_at
       ? "Ayer dejaste una accion registrada. Hoy el objetivo es sostener esa linea, no empezar de cero."
       : "Ayer no quedo una victoria marcada. Hoy importa mas construir una prueba pequena que buscar hacerlo perfecto."
     : "Todavia no hay un dia anterior para comparar. La primera evidencia empieza con lo que hagas hoy.";
+  const confidenceTone =
+    monitoring.confidence_level === "alta"
+      ? "Lectura fuerte"
+      : monitoring.confidence_level === "media"
+      ? "Lectura probable"
+      : "Lectura inicial";
+  const ritualSummary = ritualCheckinState === "vulnerable"
+    ? "Entraste vulnerable y el sistema ya ajusto la proteccion de hoy."
+    : "Entraste estable y el sistema ya registro esa ventana a tu favor.";
 
   return (
     <div className="min-h-screen bg-bg-primary relative">
@@ -259,9 +311,24 @@ export function DashboardClient() {
         <motion.header
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center pt-6"
+          className="pt-6 flex items-start justify-between gap-4"
         >
-          <LevelBadge streakSeconds={streakSeconds} />
+          <div className="flex-1 flex justify-center">
+            <LevelBadge streakSeconds={streakSeconds} />
+          </div>
+          <button
+            onClick={() => router.push("/profile")}
+            className="mt-1 rounded-2xl px-3 py-2 text-zinc-300 transition-all duration-300"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.08)",
+            }}
+          >
+            <span className="flex items-center gap-2 text-sm">
+              <UserCircle2 className="w-4 h-4 text-accent-gold" />
+              Perfil
+            </span>
+          </button>
         </motion.header>
 
         <motion.section
@@ -293,10 +360,10 @@ export function DashboardClient() {
                 Estado actual
               </p>
               <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">
-                Hoy no es un dia neutro para ti.
+                {monitoring.state_title}
               </h1>
               <p className="text-zinc-400 text-sm md:text-base leading-relaxed max-w-xl">
-                {monitoring.pattern_description}
+                {monitoring.state_message}
               </p>
             </div>
 
@@ -310,6 +377,91 @@ export function DashboardClient() {
               <p className="text-zinc-500 text-[10px] uppercase tracking-wider">Vulnerabilidad</p>
               <p className={`text-lg font-bold ${riskTone.text}`}>{monitoring.vulnerability}</p>
             </div>
+          </div>
+
+          <div className="relative flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold text-zinc-200 bg-white/5">
+              <Sparkles className="w-3.5 h-3.5 text-accent-gold" />
+              Estado: {monitoring.detected_state}
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold text-zinc-200 bg-white/5">
+              <Brain className="w-3.5 h-3.5 text-accent-gold" />
+              {confidenceTone}
+            </span>
+            {monitoring.crisis_mode && (
+              <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold text-red-300 bg-red-500/10">
+                <ShieldAlert className="w-3.5 h-3.5" />
+                Modo critico
+              </span>
+            )}
+          </div>
+
+          <div
+            className="relative rounded-2xl p-4 md:p-5 space-y-4"
+            style={{
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.06)",
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <Activity className="w-4 h-4 text-accent-gold" />
+              <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
+                {monitoring.ritual_title}
+              </p>
+            </div>
+            <p className="text-white font-semibold text-sm md:text-base">
+              {monitoring.ritual_body}
+            </p>
+
+            {ritualCompletedAt ? (
+              <div
+                className="rounded-xl px-3 py-3"
+                style={{
+                  background: "rgba(52, 211, 153, 0.08)",
+                  border: "1px solid rgba(52, 211, 153, 0.18)",
+                }}
+              >
+                <div className="flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <div className="space-y-1">
+                    <p className="text-emerald-400 text-xs font-semibold uppercase tracking-[0.18em]">
+                      Ritual registrado
+                    </p>
+                    <p className="text-zinc-200 text-xs leading-relaxed">{ritualSummary}</p>
+                    <p className="text-zinc-500 text-[11px]">
+                      Registrado hoy a las{" "}
+                      {new Date(ritualCompletedAt).toLocaleTimeString("es-ES", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                  onClick={() => handleRitualCheckin("estable")}
+                  className="rounded-xl px-4 py-3 text-sm font-semibold text-white transition-all duration-300"
+                  style={{
+                    background: "rgba(52, 211, 153, 0.08)",
+                    border: "1px solid rgba(52, 211, 153, 0.18)",
+                  }}
+                >
+                  Estoy estable
+                </button>
+                <button
+                  onClick={() => handleRitualCheckin("vulnerable")}
+                  className="rounded-xl px-4 py-3 text-sm font-semibold text-white transition-all duration-300"
+                  style={{
+                    background: "rgba(251, 191, 36, 0.08)",
+                    border: "1px solid rgba(251, 191, 36, 0.2)",
+                  }}
+                >
+                  Estoy vulnerable
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="relative grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-4">
@@ -468,7 +620,7 @@ export function DashboardClient() {
           <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-stretch">
             <NextMedalCard streakSeconds={streakSeconds} medals={data?.medals ?? []} />
             <button
-              onClick={() => router.push("/patterns")}
+              onClick={() => router.push("/progress")}
               className="flex items-center justify-center gap-2.5 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-300"
               style={{
                 background: "rgba(212, 175, 55, 0.06)",
@@ -480,6 +632,31 @@ export function DashboardClient() {
             </button>
           </div>
         </motion.section>
+
+        {monitoring.absence_alert_title && monitoring.absence_alert_body && (
+          <motion.section
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="rounded-2xl p-4 md:p-5"
+            style={{
+              background: "rgba(251, 191, 36, 0.06)",
+              border: "1px solid rgba(251, 191, 36, 0.18)",
+            }}
+          >
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+              <div className="space-y-1">
+                <p className="text-amber-300 text-xs font-semibold uppercase tracking-[0.18em]">
+                  {monitoring.absence_alert_title}
+                </p>
+                <p className="text-zinc-200 text-sm leading-relaxed">
+                  {monitoring.absence_alert_body}
+                </p>
+              </div>
+            </div>
+          </motion.section>
+        )}
 
         <motion.section
           initial={{ opacity: 0 }}
@@ -497,15 +674,15 @@ export function DashboardClient() {
               border: "1px solid rgba(212,175,55,0.14)",
             }}
           >
-            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-2">
                 <CalendarDays className="w-4 h-4 text-accent-gold" />
                 <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
-                  Primera semana
+                  {monitoring.journey_section_title}
                 </p>
               </div>
               <span className="inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold text-accent-gold bg-[rgba(212,175,55,0.08)]">
-                Dia {monitoring.journey_day} de 7
+                {monitoring.journey_badge}
               </span>
             </div>
 
@@ -541,11 +718,11 @@ export function DashboardClient() {
             <div className="flex items-center gap-2">
               <History className="w-4 h-4 text-accent-gold" />
               <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
-                Continuidad del proceso
+                Memoria del proceso
               </p>
             </div>
-            <p className="text-white font-semibold text-sm md:text-base">{continuityTitle}</p>
-            <p className="text-zinc-300 text-sm leading-relaxed">{continuityMessage}</p>
+            <p className="text-white font-semibold text-sm md:text-base">{monitoring.memory_title}</p>
+            <p className="text-zinc-300 text-sm leading-relaxed">{monitoring.memory_message}</p>
             <div
               className="rounded-xl px-3 py-2"
               style={{
@@ -607,7 +784,7 @@ export function DashboardClient() {
             }}
           >
             <button
-              onClick={() => router.push("/progress")}
+              onClick={() => router.push("/patterns")}
               className="w-full h-full rounded-2xl p-4 md:p-5 text-left transition-all duration-300"
               style={{
                 background: "transparent",
