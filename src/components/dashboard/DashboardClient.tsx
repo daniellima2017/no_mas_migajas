@@ -15,9 +15,6 @@ import {
   MessageSquareWarning,
   Sparkles,
   CheckCircle2,
-  History,
-  CalendarDays,
-  Target,
   UserCircle2,
 } from "lucide-react";
 import { LevelBadge } from "@/components/dashboard/LevelBadge";
@@ -288,13 +285,6 @@ export function DashboardClient() {
   const victoryMessage = missionCompletedAt
     ? monitoring.mission_completion_message
     : monitoring.victory_body;
-  const continuityRecord =
-    data?.monitoringHistory.find((entry) => entry.state_date !== monitoring.mission_date) || null;
-  const continuityEvidence = continuityRecord
-    ? continuityRecord.mission_completed_at
-      ? "Ayer dejaste una accion registrada. Hoy el objetivo es sostener esa linea, no empezar de cero."
-      : "Ayer no quedo una victoria marcada. Hoy importa mas construir una prueba pequena que buscar hacerlo perfecto."
-    : "Todavia no hay un dia anterior para comparar. La primera evidencia empieza con lo que hagas hoy.";
   const confidenceTone =
     monitoring.confidence_level === "alta"
       ? "Lectura fuerte"
@@ -633,115 +623,10 @@ export function DashboardClient() {
           </div>
         </motion.section>
 
-        {monitoring.absence_alert_title && monitoring.absence_alert_body && (
-          <motion.section
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="rounded-2xl p-4 md:p-5"
-            style={{
-              background: "rgba(251, 191, 36, 0.06)",
-              border: "1px solid rgba(251, 191, 36, 0.18)",
-            }}
-          >
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
-              <div className="space-y-1">
-                <p className="text-amber-300 text-xs font-semibold uppercase tracking-[0.18em]">
-                  {monitoring.absence_alert_title}
-                </p>
-                <p className="text-zinc-200 text-sm leading-relaxed">
-                  {monitoring.absence_alert_body}
-                </p>
-              </div>
-            </div>
-          </motion.section>
-        )}
-
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.22 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
-          style={{
-            alignItems: "stretch",
-          }}
-        >
-          <div
-            className="rounded-2xl p-4 md:p-5 space-y-3"
-            style={{
-              background: "linear-gradient(145deg, rgba(212,175,55,0.06), rgba(255,255,255,0.03))",
-              border: "1px solid rgba(212,175,55,0.14)",
-            }}
-          >
-              <div className="flex items-center justify-between gap-3 flex-wrap">
-              <div className="flex items-center gap-2">
-                <CalendarDays className="w-4 h-4 text-accent-gold" />
-                <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
-                  {monitoring.journey_section_title}
-                </p>
-              </div>
-              <span className="inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold text-accent-gold bg-[rgba(212,175,55,0.08)]">
-                {monitoring.journey_badge}
-              </span>
-            </div>
-
-            <p className="text-white font-semibold text-sm md:text-base">{monitoring.journey_title}</p>
-            <p className="text-zinc-300 text-sm leading-relaxed">{monitoring.journey_message}</p>
-
-            <div
-              className="rounded-xl px-3 py-3"
-              style={{
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.06)",
-              }}
-            >
-              <div className="flex items-start gap-2">
-                <Target className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                <div className="space-y-1">
-                  <p className="text-zinc-300 text-xs font-semibold uppercase tracking-[0.18em]">
-                    {monitoring.journey_focus_title}
-                  </p>
-                  <p className="text-zinc-400 text-xs leading-relaxed">{monitoring.journey_focus_body}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            className="rounded-2xl p-4 md:p-5 space-y-3"
-            style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.06)",
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <History className="w-4 h-4 text-accent-gold" />
-              <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
-                Memoria del proceso
-              </p>
-            </div>
-            <p className="text-white font-semibold text-sm md:text-base">{monitoring.memory_title}</p>
-            <p className="text-zinc-300 text-sm leading-relaxed">{monitoring.memory_message}</p>
-            <div
-              className="rounded-xl px-3 py-2"
-              style={{
-                background: "rgba(255,255,255,0.02)",
-                border: "1px solid rgba(255,255,255,0.06)",
-              }}
-            >
-              <p className="text-zinc-500 text-[11px] uppercase tracking-[0.18em] font-semibold mb-1">
-                Lo que arrastras hacia hoy
-              </p>
-              <p className="text-zinc-400 text-xs leading-relaxed">{continuityEvidence}</p>
-            </div>
-          </div>
-        </motion.section>
-
-        <motion.section
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.38 }}
+          transition={{ delay: 0.24 }}
         >
           <ReinforcementFeed streakSeconds={streakSeconds} />
         </motion.section>
@@ -749,7 +634,7 @@ export function DashboardClient() {
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.42 }}
+          transition={{ delay: 0.3 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch"
         >
           <div
@@ -817,7 +702,7 @@ export function DashboardClient() {
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.46 }}
+          transition={{ delay: 0.34 }}
           className="flex justify-end"
         >
           <button

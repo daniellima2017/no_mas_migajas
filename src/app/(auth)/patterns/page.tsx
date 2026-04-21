@@ -6,11 +6,13 @@ import { motion } from "framer-motion";
 import { AlertTriangle, BarChart3, History, Radar, UserCircle2 } from "lucide-react";
 import { TriggerChart } from "@/components/achievements/TriggerChart";
 import { RelapseHistory } from "@/components/achievements/RelapseHistory";
-import type { Relapse, TriggerPatterns } from "@/types";
+import type { MonitoringDailyState, MonitoringSnapshot, Relapse, TriggerPatterns } from "@/types";
 
 interface PatternsData {
   relapses: Relapse[];
   triggerPatterns: TriggerPatterns | null;
+  monitoring: MonitoringSnapshot | null;
+  monitoringHistory: MonitoringDailyState[];
 }
 
 function LoadingSkeleton() {
@@ -34,14 +36,25 @@ export default function PatternsPage() {
     setError(null);
 
     try {
-      const response = await fetch("/api/achievements");
+      const [achievementsResponse, dashboardResponse] = await Promise.all([
+        fetch("/api/achievements"),
+        fetch("/api/dashboard"),
+      ]);
 
-      if (!response.ok) {
+      if (!achievementsResponse.ok || !dashboardResponse.ok) {
         throw new Error("Error al cargar patrones");
       }
 
-      const patternsData = await response.json();
-      setData(patternsData);
+      const [patternsData, dashboardData] = await Promise.all([
+        achievementsResponse.json(),
+        dashboardResponse.json(),
+      ]);
+      setData({
+        relapses: patternsData.relapses || [],
+        triggerPatterns: patternsData.triggerPatterns || null,
+        monitoring: dashboardData.monitoring || null,
+        monitoringHistory: dashboardData.monitoringHistory || [],
+      });
     } catch {
       setError("No se pudieron cargar tus patrones");
     } finally {
@@ -74,6 +87,15 @@ export default function PatternsPage() {
       </div>
     );
   }
+
+  const monitoring = data?.monitoring ?? null;
+  const continuityRecord =
+    data?.monitoringHistory.find((entry) => entry.state_date !== monitoring?.mission_date) || null;
+  const continuityEvidence = continuityRecord
+    ? continuityRecord.mission_completed_at
+      ? "Ayer dejaste una accion registrada. Hoy el objetivo es sostener esa linea, no empezar de cero."
+      : "Ayer no quedo una victoria marcada. Hoy importa mas construir una prueba pequena que buscar hacerlo perfecto."
+    : "Todavia no hay un dia anterior para comparar. La primera evidencia empieza con lo que hagas hoy.";
 
   return (
     <div className="min-h-screen bg-bg-primary">
@@ -140,10 +162,76 @@ export default function PatternsPage() {
           </div>
         </motion.section>
 
+        {monitoring && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.14 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <div className="bg-bg-card border border-border-default rounded-xl p-6 space-y-4">
+              <div className="flex items-center gap-2">
+                <History className="w-5 h-5 text-accent-gold" />
+                <h2 className="text-white font-semibold">Memoria del proceso</h2>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-white text-base font-semibold">{monitoring.memory_title}</p>
+                <p className="text-zinc-300 text-sm leading-relaxed">
+                  {monitoring.memory_message}
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border-default bg-white/[0.02] p-4">
+                <p className="text-zinc-400 text-[11px] uppercase tracking-[0.18em] font-semibold mb-2">
+                  Lo que arrastras hacia hoy
+                </p>
+                <p className="text-zinc-300 text-xs leading-relaxed">{continuityEvidence}</p>
+              </div>
+            </div>
+
+            <div className="bg-bg-card border border-border-default rounded-xl p-6 space-y-4">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-amber-400" />
+                <h2 className="text-white font-semibold">Continuidad de lectura</h2>
+              </div>
+
+              {monitoring.absence_alert_title && monitoring.absence_alert_body ? (
+                <div
+                  className="rounded-xl p-4"
+                  style={{
+                    background: "rgba(251, 191, 36, 0.06)",
+                    border: "1px solid rgba(251, 191, 36, 0.18)",
+                  }}
+                >
+                  <p className="text-amber-300 text-xs font-semibold uppercase tracking-[0.18em] mb-2">
+                    {monitoring.absence_alert_title}
+                  </p>
+                  <p className="text-zinc-200 text-sm leading-relaxed">
+                    {monitoring.absence_alert_body}
+                  </p>
+                </div>
+              ) : (
+                <div className="rounded-xl border border-border-default bg-white/[0.02] p-4">
+                  <p className="text-zinc-300 text-sm leading-relaxed">
+                    Hoy la lectura esta al dia. El valor de esta pantalla no es solo mostrar recaidas:
+                    tambien conserva contexto para que el sistema no se vuelva generico.
+                  </p>
+                </div>
+              )}
+
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Aqui vive la parte profunda del proceso: contexto acumulado, repeticiones,
+                huecos de registro y lo que mas tarde se convierte en patron.
+              </p>
+            </div>
+          </motion.section>
+        )}
+
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.16 }}
+          transition={{ delay: 0.2 }}
           className="bg-bg-card border border-border-default rounded-xl p-6"
         >
           <TriggerChart
@@ -155,7 +243,7 @@ export default function PatternsPage() {
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.24 }}
+          transition={{ delay: 0.28 }}
           className="pb-8"
         >
           <RelapseHistory

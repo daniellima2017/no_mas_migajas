@@ -3,12 +3,23 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { AlertTriangle, ArrowRight, LineChart, ShieldCheck, Sparkles, UserCircle2 } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  LineChart,
+  ShieldCheck,
+  Sparkles,
+  UserCircle2,
+  CalendarDays,
+  Target,
+  Trophy,
+} from "lucide-react";
 import { MedalGrid } from "@/components/achievements/MedalGrid";
-import type { Medal } from "@/types";
+import type { Medal, MonitoringSnapshot } from "@/types";
 
 interface ProgressData {
   medals: Medal[];
+  monitoring: MonitoringSnapshot | null;
 }
 
 function LoadingSkeleton() {
@@ -34,14 +45,23 @@ export default function AchievementsPage() {
     setError(null);
 
     try {
-      const response = await fetch("/api/achievements");
+      const [achievementsResponse, dashboardResponse] = await Promise.all([
+        fetch("/api/achievements"),
+        fetch("/api/dashboard"),
+      ]);
 
-      if (!response.ok) {
+      if (!achievementsResponse.ok || !dashboardResponse.ok) {
         throw new Error("Error al cargar logros");
       }
 
-      const achievementsData = await response.json();
-      setData(achievementsData);
+      const [achievementsData, dashboardData] = await Promise.all([
+        achievementsResponse.json(),
+        dashboardResponse.json(),
+      ]);
+      setData({
+        medals: achievementsData.medals || [],
+        monitoring: dashboardData.monitoring || null,
+      });
     } catch {
       setError("No se pudieron cargar los logros");
     } finally {
@@ -147,10 +167,76 @@ export default function AchievementsPage() {
           </Link>
         </motion.section>
 
+        {data?.monitoring && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.14 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <div className="bg-bg-card border border-border-default rounded-xl p-6 space-y-4">
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <CalendarDays className="w-5 h-5 text-accent-gold" />
+                  <h2 className="text-white font-semibold">{data.monitoring.journey_section_title}</h2>
+                </div>
+                <span className="inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold text-accent-gold bg-[rgba(212,175,55,0.08)]">
+                  {data.monitoring.journey_badge}
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-white text-base font-semibold">{data.monitoring.journey_title}</p>
+                <p className="text-zinc-300 text-sm leading-relaxed">
+                  {data.monitoring.journey_message}
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border-default bg-white/[0.02] p-4">
+                <div className="flex items-start gap-2">
+                  <Target className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <div className="space-y-1">
+                    <p className="text-zinc-300 text-xs font-semibold uppercase tracking-[0.18em]">
+                      {data.monitoring.journey_focus_title}
+                    </p>
+                    <p className="text-zinc-400 text-xs leading-relaxed">
+                      {data.monitoring.journey_focus_body}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-bg-card border border-border-default rounded-xl p-6 space-y-4">
+              <div className="flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-accent-gold" />
+                <h2 className="text-white font-semibold">Evidencia de cambio</h2>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-white text-base font-semibold">{data.monitoring.identity_title}</p>
+                <p className="text-zinc-300 text-sm leading-relaxed">
+                  {data.monitoring.identity_message}
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border-default bg-white/[0.02] p-4 space-y-2">
+                <p className="text-zinc-300 text-xs font-semibold uppercase tracking-[0.18em]">
+                  Lo mas importante que ya sostienes
+                </p>
+                <p className="text-white text-sm font-medium">{data.monitoring.victory_title}</p>
+                <p className="text-zinc-400 text-xs leading-relaxed">
+                  {data.monitoring.behavior_proof}
+                </p>
+              </div>
+            </div>
+          </motion.section>
+        )}
+
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.16 }}
+          transition={{ delay: 0.2 }}
           className="bg-bg-card border border-border-default rounded-xl p-6"
         >
           <MedalGrid medals={data?.medals || []} />
