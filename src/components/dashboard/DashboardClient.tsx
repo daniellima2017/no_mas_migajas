@@ -13,11 +13,8 @@ import {
   Activity,
   BookOpen,
   MessageSquareWarning,
-  ShieldCheck,
   Sparkles,
   CheckCircle2,
-  TrendingUp,
-  Fingerprint,
   History,
   CalendarDays,
   Target,
@@ -25,7 +22,6 @@ import {
 import { LevelBadge } from "@/components/dashboard/LevelBadge";
 import { StreakTimer } from "@/components/dashboard/StreakTimer";
 import { StreakProgressBar } from "@/components/streak/StreakProgressBar";
-import { ScoreCard } from "@/components/dashboard/ScoreCard";
 import { NextMedalCard } from "@/components/dashboard/NextMedalCard";
 import { ReinforcementFeed } from "@/components/dashboard/ReinforcementFeed";
 import { ResetModal } from "@/components/streak/ResetModal";
@@ -235,9 +231,6 @@ export function DashboardClient() {
   const victoryMessage = missionCompletedAt
     ? monitoring.mission_completion_message
     : monitoring.victory_body;
-  const identityMessage = missionCompletedAt
-    ? `${monitoring.identity_message} ${monitoring.behavior_proof}`
-    : monitoring.identity_message;
   const continuityRecord =
     data?.monitoringHistory.find((entry) => entry.state_date !== monitoring.mission_date) || null;
   const continuityTitle = continuityRecord
@@ -452,80 +445,39 @@ export function DashboardClient() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.18 }}
-          className="rounded-2xl p-4 md:p-5 space-y-4"
-          style={{
-            background: "linear-gradient(145deg, rgba(212,175,55,0.06), rgba(255,255,255,0.03))",
-            border: "1px solid rgba(212,175,55,0.14)",
-          }}
-        >
-          <div className="flex items-center justify-between gap-3 flex-wrap">
-            <div className="flex items-center gap-2">
-              <CalendarDays className="w-4 h-4 text-accent-gold" />
-              <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
-                Primera semana
-              </p>
-            </div>
-            <span className="inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold text-accent-gold bg-[rgba(212,175,55,0.08)]">
-              Dia {monitoring.journey_day} de 7
-            </span>
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-white font-semibold text-sm md:text-base">{monitoring.journey_title}</p>
-            <p className="text-zinc-300 text-sm leading-relaxed">{monitoring.journey_message}</p>
-          </div>
-
-          <div
-            className="rounded-xl px-3 py-3"
-            style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.06)",
-            }}
-          >
-            <div className="flex items-start gap-2">
-              <Target className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-              <div className="space-y-1">
-                <p className="text-zinc-300 text-xs font-semibold uppercase tracking-[0.18em]">
-                  {monitoring.journey_focus_title}
-                </p>
-                <p className="text-zinc-400 text-xs leading-relaxed">{monitoring.journey_focus_body}</p>
-                <p className="text-zinc-500 text-[11px] leading-relaxed">
-                  Fase actual: {monitoring.journey_phase}
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
-        <motion.section
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="rounded-2xl p-4 md:p-5 space-y-3"
+          className="rounded-2xl p-4 md:p-5 space-y-5"
           style={{
             background: "rgba(255,255,255,0.03)",
             border: "1px solid rgba(255,255,255,0.06)",
           }}
         >
-          <div className="flex items-center gap-2">
-            <History className="w-4 h-4 text-accent-gold" />
-            <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
-              Continuidad del proceso
-            </p>
+          <div className="text-center">
+            {data?.streak ? (
+              <StreakTimer startedAt={data.streak.started_at} />
+            ) : (
+              <div className="py-6">
+                <p className="text-zinc-400 text-sm">Sin streak activo</p>
+              </div>
+            )}
           </div>
-          <p className="text-white font-semibold text-sm md:text-base">{continuityTitle}</p>
-          <p className="text-zinc-300 text-sm leading-relaxed">{continuityMessage}</p>
-          <div
-            className="rounded-xl px-3 py-2"
-            style={{
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.06)",
-            }}
-          >
-            <p className="text-zinc-500 text-[11px] uppercase tracking-[0.18em] font-semibold mb-1">
-              Lo que arrastras hacia hoy
-            </p>
-            <p className="text-zinc-400 text-xs leading-relaxed">{continuityEvidence}</p>
+
+          <div className="px-2">
+            <StreakProgressBar currentSeconds={streakSeconds} />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-stretch">
+            <NextMedalCard streakSeconds={streakSeconds} medals={data?.medals ?? []} />
+            <button
+              onClick={() => router.push("/patterns")}
+              className="flex items-center justify-center gap-2.5 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-300"
+              style={{
+                background: "rgba(212, 175, 55, 0.06)",
+                border: "1px solid rgba(212, 175, 55, 0.2)",
+              }}
+            >
+              <BarChart3 className="w-4 h-4 text-accent-gold" />
+              <span className="text-accent-gold">Ver progreso</span>
+            </button>
           </div>
         </motion.section>
 
@@ -533,39 +485,85 @@ export function DashboardClient() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.22 }}
-          className="text-center py-1"
-        >
-          {data?.streak ? (
-            <StreakTimer startedAt={data.streak.started_at} />
-          ) : (
-            <div className="py-8">
-              <p className="text-zinc-400 text-sm">Sin streak activo</p>
-            </div>
-          )}
-        </motion.section>
-
-        <motion.section
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.26 }}
-          className="px-2"
-        >
-          <StreakProgressBar currentSeconds={streakSeconds} />
-        </motion.section>
-
-        <motion.section
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.29 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          style={{
+            alignItems: "stretch",
+          }}
         >
-          <ScoreCard quizResult={data?.quizResult ?? null} />
-          <NextMedalCard streakSeconds={streakSeconds} medals={data?.medals ?? []} />
+          <div
+            className="rounded-2xl p-4 md:p-5 space-y-3"
+            style={{
+              background: "linear-gradient(145deg, rgba(212,175,55,0.06), rgba(255,255,255,0.03))",
+              border: "1px solid rgba(212,175,55,0.14)",
+            }}
+          >
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
+                <CalendarDays className="w-4 h-4 text-accent-gold" />
+                <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
+                  Primera semana
+                </p>
+              </div>
+              <span className="inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold text-accent-gold bg-[rgba(212,175,55,0.08)]">
+                Dia {monitoring.journey_day} de 7
+              </span>
+            </div>
+
+            <p className="text-white font-semibold text-sm md:text-base">{monitoring.journey_title}</p>
+            <p className="text-zinc-300 text-sm leading-relaxed">{monitoring.journey_message}</p>
+
+            <div
+              className="rounded-xl px-3 py-3"
+              style={{
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.06)",
+              }}
+            >
+              <div className="flex items-start gap-2">
+                <Target className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                <div className="space-y-1">
+                  <p className="text-zinc-300 text-xs font-semibold uppercase tracking-[0.18em]">
+                    {monitoring.journey_focus_title}
+                  </p>
+                  <p className="text-zinc-400 text-xs leading-relaxed">{monitoring.journey_focus_body}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="rounded-2xl p-4 md:p-5 space-y-3"
+            style={{
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.06)",
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <History className="w-4 h-4 text-accent-gold" />
+              <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
+                Continuidad del proceso
+              </p>
+            </div>
+            <p className="text-white font-semibold text-sm md:text-base">{continuityTitle}</p>
+            <p className="text-zinc-300 text-sm leading-relaxed">{continuityMessage}</p>
+            <div
+              className="rounded-xl px-3 py-2"
+              style={{
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(255,255,255,0.06)",
+              }}
+            >
+              <p className="text-zinc-500 text-[11px] uppercase tracking-[0.18em] font-semibold mb-1">
+                Lo que arrastras hacia hoy
+              </p>
+              <p className="text-zinc-400 text-xs leading-relaxed">{continuityEvidence}</p>
+            </div>
+          </div>
         </motion.section>
 
         <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 0.38 }}
         >
           <ReinforcementFeed streakSeconds={streakSeconds} />
@@ -575,7 +573,7 @@ export function DashboardClient() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.42 }}
-          className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr_auto] gap-4 items-stretch"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch"
         >
           <div
             className="rounded-2xl p-4 md:p-5"
@@ -584,37 +582,20 @@ export function DashboardClient() {
               border: "1px solid rgba(255,255,255,0.06)",
             }}
           >
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-accent-gold" />
-                  <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
-                    Victoria observable
-                  </p>
-                </div>
-                <p className="text-white font-semibold text-sm md:text-base leading-relaxed">
-                  {monitoring.victory_title}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-accent-gold" />
+                <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
+                  Lo mas importante hoy
                 </p>
-                <p className="text-zinc-300 text-sm md:text-base leading-relaxed">
-                  {victoryMessage}
-                </p>
-                <p className="text-zinc-500 text-xs leading-relaxed">{monitoring.behavior_proof}</p>
               </div>
-
-              <button
-                onClick={() => setShowResetModal(true)}
-                className="px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest transition-all duration-300 text-white flex-shrink-0"
-                style={{
-                  background: "linear-gradient(135deg, rgba(255, 59, 48, 0.15) 0%, rgba(255, 59, 48, 0.08) 100%)",
-                  border: "2px solid rgba(255, 59, 48, 0.35)",
-                  boxShadow: "0 4px 20px rgba(255, 59, 48, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.04)",
-                }}
-              >
-                <span className="flex items-center justify-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-accent-red" />
-                  <span className="text-accent-red">Recaida</span>
-                </span>
-              </button>
+              <p className="text-white font-semibold text-sm md:text-base leading-relaxed">
+                {monitoring.victory_title}
+              </p>
+              <p className="text-zinc-300 text-sm md:text-base leading-relaxed">
+                {victoryMessage}
+              </p>
+              <p className="text-zinc-500 text-xs leading-relaxed">{monitoring.behavior_proof}</p>
             </div>
           </div>
 
@@ -625,47 +606,56 @@ export function DashboardClient() {
               border: "1px solid rgba(255,255,255,0.08)",
             }}
           >
-            <div className="flex items-center gap-2">
-              <Fingerprint className="w-4 h-4 text-accent-gold" />
-              <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
-                Identidad en cambio
-              </p>
-            </div>
-            <p className="text-white font-semibold text-sm md:text-base">{monitoring.identity_title}</p>
-            <p className="text-zinc-300 text-sm leading-relaxed">{identityMessage}</p>
-            <div
-              className="rounded-xl px-3 py-2"
+            <button
+              onClick={() => router.push("/progress")}
+              className="w-full h-full rounded-2xl p-4 md:p-5 text-left transition-all duration-300"
               style={{
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.06)",
+                background: "transparent",
+                border: "none",
+                padding: 0,
               }}
             >
-              <div className="flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                <div className="space-y-1">
-                  <p className="text-zinc-300 text-xs font-semibold uppercase tracking-[0.18em]">
-                    Evidencia de cambio
-                  </p>
-                  <p className="text-zinc-400 text-xs leading-relaxed">
-                    {missionCompletedAt
-                      ? "Hoy ya dejaste una prueba concreta de control sobre tu patron."
-                      : "Tu cambio empieza a verse cuando sostienes una pausa, no solo cuando entiendes lo que sientes."}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4 text-accent-gold" />
+                  <p className="text-zinc-400 text-xs uppercase tracking-[0.2em] font-semibold">
+                    Ver mas detalles
                   </p>
                 </div>
+                <p className="text-white font-semibold text-sm md:text-base">
+                  Patrones, gatillos y recaidas
+                </p>
+                <p className="text-zinc-300 text-sm leading-relaxed">
+                  Abre la lectura profunda del sistema para ver horarios criticos, gatillos y el historial que ya se esta repitiendo.
+                </p>
+                <div className="flex items-center gap-2 text-accent-gold text-sm font-semibold">
+                  <span>Ir a patrones</span>
+                  <ArrowRight className="w-4 h-4" />
+                </div>
               </div>
-            </div>
+            </button>
           </div>
+        </motion.section>
 
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.46 }}
+          className="flex justify-end"
+        >
           <button
-            onClick={() => router.push("/progress")}
-            className="flex items-center justify-center gap-2.5 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-300"
+            onClick={() => setShowResetModal(true)}
+            className="px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest transition-all duration-300 text-white"
             style={{
-              background: "rgba(212, 175, 55, 0.06)",
-              border: "1px solid rgba(212, 175, 55, 0.2)",
+              background: "linear-gradient(135deg, rgba(255, 59, 48, 0.15) 0%, rgba(255, 59, 48, 0.08) 100%)",
+              border: "2px solid rgba(255, 59, 48, 0.35)",
+              boxShadow: "0 4px 20px rgba(255, 59, 48, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.04)",
             }}
           >
-            <TrendingUp className="w-4 h-4 text-accent-gold" />
-            <span className="text-accent-gold">Ver progreso y patrones</span>
+            <span className="flex items-center justify-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-accent-red" />
+              <span className="text-accent-red">Registrar recaida</span>
+            </span>
           </button>
         </motion.section>
       </div>

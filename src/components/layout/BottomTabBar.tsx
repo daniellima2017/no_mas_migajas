@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, BookOpen, MessageSquare, LineChart, User } from "lucide-react";
+import { Home, BookOpen, MessageSquare, LineChart, Radar } from "lucide-react";
 
 interface TabItem {
   href: string;
@@ -16,8 +16,8 @@ const TABS: TabItem[] = [
   { href: "/dashboard", icon: Home, label: "Inicio" },
   { href: "/progress", icon: LineChart, label: "Progreso" },
   { href: "/simulator", icon: MessageSquare, label: "Simulador", isFAB: true },
+  { href: "/patterns", icon: Radar, label: "Patrones" },
   { href: "/journal", icon: BookOpen, label: "Diario" },
-  { href: "/profile", icon: User, label: "Perfil" },
 ];
 
 export function BottomTabBar() {

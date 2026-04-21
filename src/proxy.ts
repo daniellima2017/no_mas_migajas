@@ -173,6 +173,7 @@ export async function proxy(request: NextRequest) {
       pathname.startsWith("/simulator") ||
       pathname.startsWith("/profile") ||
       pathname.startsWith("/progress") ||
+      pathname.startsWith("/patterns") ||
       pathname.startsWith("/achievements")
     ) {
       return NextResponse.redirect(

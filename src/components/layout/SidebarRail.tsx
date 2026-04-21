@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Home, MessageSquare, LineChart, BookOpen, User } from "lucide-react";
+import { Home, MessageSquare, LineChart, BookOpen, Radar, User } from "lucide-react";
 
 interface RailItem {
   href: string;
@@ -14,6 +14,7 @@ interface RailItem {
 const RAIL_ITEMS: RailItem[] = [
   { href: "/dashboard", icon: Home, label: "Inicio" },
   { href: "/progress", icon: LineChart, label: "Progreso" },
+  { href: "/patterns", icon: Radar, label: "Patrones" },
   { href: "/simulator", icon: MessageSquare, label: "Simulador" },
   { href: "/journal", icon: BookOpen, label: "Diario" },
   { href: "/profile", icon: User, label: "Perfil" },
