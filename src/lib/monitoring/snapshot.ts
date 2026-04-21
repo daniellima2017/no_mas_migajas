@@ -352,11 +352,20 @@ function getMemorySnapshot(
   >[],
   currentRisk: number,
   currentPattern: string,
-  seed: number
+  seed: number,
+  journeyDay: number
 ) {
   const previous = history.find((entry) => entry.state_date !== history[0]?.state_date) || null;
 
   if (!previous) {
+    if (journeyDay > 7) {
+      return {
+        title: "Tu memoria fina todavia se esta armando",
+        message:
+          "Tu proceso ya tiene recorrido, pero esta capa diaria todavia esta juntando comparaciones recientes para devolverte contraste mas preciso.",
+      };
+    }
+
     return {
       title: "Hoy empieza tu memoria de proceso",
       message:
@@ -691,7 +700,7 @@ export function buildMonitoringSnapshot({
   const identity = getIdentitySnapshot(vulnerability, streakSeconds);
   const journey = getJourneySnapshot(journeyDay, vulnerability);
   const stateSnapshot = getStateSnapshot(detectedState, confidenceLevel, crisisMode, timeContext, seed);
-  const memorySnapshot = getMemorySnapshot(monitoringHistory, riskPercent, pattern.label, seed);
+  const memorySnapshot = getMemorySnapshot(monitoringHistory, riskPercent, pattern.label, seed, journeyDay);
   const absenceAlert = getAbsenceAlert(monitoringHistory, now);
   const missionDate = now.toISOString().slice(0, 10);
   const missionKey = [

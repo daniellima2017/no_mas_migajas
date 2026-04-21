@@ -14,6 +14,8 @@ import {
   ChevronDown,
   ChevronUp,
   Loader2,
+  Sparkles,
+  ShieldCheck,
   UserCircle2,
 } from "lucide-react";
 import type { JournalEntry } from "@/types";
@@ -173,6 +175,34 @@ export default function JournalPage() {
         </div>
 
         <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <Card className="bg-bg-card border-border-default p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-4 h-4 text-accent-gold" />
+                <p className="text-white text-sm font-semibold">Como usar este espacio</p>
+              </div>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                No necesitas escribir bonito ni entender todo. Solo vaciar el ruido ya le da al sistema
+                material real para devolverte claridad.
+              </p>
+            </Card>
+
+            <Card className="bg-bg-card border-border-default p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <p className="text-white text-sm font-semibold">Lo que queda registrado hoy</p>
+              </div>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Cada entrada deja una huella privada de como llegaste. No es solo descarga: es memoria
+                emocional para que el proceso no se vuelva generico.
+              </p>
+            </Card>
+          </motion.div>
+
           <JournalInput
             onSubmit={handleSubmit}
             onAutoSave={handleAutoSave}
@@ -193,15 +223,41 @@ export default function JournalPage() {
           )}
 
           {feedback && !isLoadingFeedback && (
-            <div className="flex justify-center">
-              <Button
-                onClick={handleNewEntry}
-                variant="outline"
-                className="border-border-default text-zinc-300 hover:bg-zinc-800"
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-4"
+            >
+              <Card
+                className="p-4"
+                style={{
+                  background: "rgba(52, 211, 153, 0.06)",
+                  border: "1px solid rgba(52, 211, 153, 0.16)",
+                }}
               >
-                Nueva entrada
-              </Button>
-            </div>
+                <div className="flex items-start gap-3">
+                  <ShieldCheck className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <div className="space-y-1">
+                    <p className="text-emerald-300 text-xs font-semibold uppercase tracking-[0.18em]">
+                      Entrada registrada
+                    </p>
+                    <p className="text-zinc-200 text-sm leading-relaxed">
+                      Hoy ya dejaste una huella real del proceso. Eso cuenta aunque todavia no te sientas distinta.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              <div className="flex justify-center">
+                <Button
+                  onClick={handleNewEntry}
+                  variant="outline"
+                  className="border-border-default text-zinc-300 hover:bg-zinc-800"
+                >
+                  Nueva entrada
+                </Button>
+              </div>
+            </motion.div>
           )}
         </div>
 
@@ -240,7 +296,7 @@ export default function JournalPage() {
                   Sin entradas anteriores
                 </p>
                 <p className="text-zinc-600 text-xs mt-1">
-                  Tu primera entrada aparecera aqui
+                  Tu primera entrada aparecera aqui. Lo importante no es escribir mucho: es dejar una señal honesta del dia.
                 </p>
               </div>
             </Card>

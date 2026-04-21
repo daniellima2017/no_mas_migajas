@@ -22,6 +22,11 @@ interface ProgressData {
   monitoring: MonitoringSnapshot | null;
 }
 
+function getJourneyProgress(journeyDay: number) {
+  const capped = Math.min(journeyDay, 45);
+  return Math.max(8, Math.round((capped / 45) * 100));
+}
+
 function LoadingSkeleton() {
   return (
     <div className="min-h-screen bg-bg-primary p-4 md:p-6 space-y-6 animate-pulse">
@@ -233,10 +238,51 @@ export default function AchievementsPage() {
           </motion.section>
         )}
 
+        {data?.monitoring && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.18 }}
+            className="bg-bg-card border border-border-default rounded-xl p-6 space-y-4"
+          >
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-accent-gold" />
+              <h2 className="text-white font-semibold">Ritmo acumulado</h2>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-3 text-xs uppercase tracking-[0.18em]">
+                <span className="text-zinc-500">Fase actual</span>
+                <span className="text-accent-gold font-semibold">{data.monitoring.journey_phase}</span>
+              </div>
+              <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${getJourneyProgress(data.monitoring.journey_day)}%`,
+                    background:
+                      "linear-gradient(90deg, rgba(212,175,55,0.55) 0%, rgba(251,191,36,0.95) 100%)",
+                  }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-xs text-zinc-500">
+                <span>Dia 1</span>
+                <span>Dia {data.monitoring.journey_day}</span>
+                <span>Dia 45+</span>
+              </div>
+            </div>
+
+            <p className="text-zinc-300 text-sm leading-relaxed">
+              Tu progreso no se mide solo por medallas. Tambien se mide por cuanto cambia la fase
+              del proceso y por cuanta menos urgencia necesita tu sistema para sostenerse.
+            </p>
+          </motion.section>
+        )}
+
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.24 }}
           className="bg-bg-card border border-border-default rounded-xl p-6"
         >
           <MedalGrid medals={data?.medals || []} />
