@@ -2,8 +2,11 @@
 
 import { Clock, Shield, Award, Crown, Diamond, Star } from "lucide-react";
 
+import type { Medal } from "@/types";
+
 interface NextMedalCardProps {
   streakSeconds: number;
+  medals: Medal[];
 }
 
 interface MedalThreshold {
@@ -30,15 +33,16 @@ function formatTimeRemaining(seconds: number): string {
   return `${hours}h`;
 }
 
-function getNextMedal(streakSeconds: number): MedalThreshold | null {
+function getNextMedal(streakSeconds: number, medals: Medal[]): MedalThreshold | null {
+  const unlockedTypes = new Set(medals.map((medal) => medal.medal_type));
   for (const medal of MEDAL_THRESHOLDS) {
-    if (streakSeconds < medal.seconds) return medal;
+    if (!unlockedTypes.has(medal.type)) return medal;
   }
   return null;
 }
 
-export function NextMedalCard({ streakSeconds }: NextMedalCardProps) {
-  const nextMedal = getNextMedal(streakSeconds);
+export function NextMedalCard({ streakSeconds, medals }: NextMedalCardProps) {
+  const nextMedal = getNextMedal(streakSeconds, medals);
 
   if (!nextMedal) {
     return (

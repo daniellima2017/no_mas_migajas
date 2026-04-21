@@ -6,6 +6,7 @@ interface MonitoringInputs {
   triggerPatterns: Pick<TriggerPatterns, "avg_craving" | "most_common_reason" | "most_common_hour"> | null;
   quizResult: Pick<QuizResult, "score"> | null;
   userCreatedAt?: string | null;
+  journeyDayOverride?: number;
   recentSimulatorUsageCount?: number;
   recentJournalUsageCount?: number;
   now?: Date;
@@ -300,6 +301,7 @@ export function buildMonitoringSnapshot({
   triggerPatterns,
   quizResult,
   userCreatedAt = null,
+  journeyDayOverride,
   recentSimulatorUsageCount = 0,
   recentJournalUsageCount = 0,
   now = new Date(),
@@ -311,7 +313,7 @@ export function buildMonitoringSnapshot({
   const mostCommonReason = triggerPatterns?.most_common_reason?.toLowerCase() ?? "";
   const mostCommonHour = triggerPatterns?.most_common_hour ?? null;
   const timeContext = getTimeContext(now);
-  const journeyDay = getJourneyDay(userCreatedAt, now);
+  const journeyDay = journeyDayOverride ?? getJourneyDay(userCreatedAt, now);
   const lastRelapseAt = relapses[0]?.created_at ?? null;
   const hoursSinceLastRelapse = getHoursSince(lastRelapseAt, now);
   const nearCriticalHour = isNearCriticalHour(mostCommonHour, now);

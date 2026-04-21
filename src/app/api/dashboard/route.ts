@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { SessionData, sessionOptions } from "@/lib/auth/session";
 import { buildMonitoringSnapshot } from "@/lib/monitoring/snapshot";
 import type { MonitoringDailyState } from "@/types";
+import { getStreakSecondsFromStartedAt, syncMedalsForUser } from "@/lib/medals/sync";
 
 export async function GET(request: NextRequest) {
   try {
@@ -46,8 +47,7 @@ export async function GET(request: NextRequest) {
         .gte("created_at", recentWindowStart),
     ]);
 
-    const lastQuizAt = quizResult.data?.created_at || null;
-    const monitoring = buildMonitoringSnapshot({
+    const initialMonitoring = buildMonitoringSnapshot({
       streak: streakResult.data || null,
       relapses: relapsesResult.data || [],
       triggerPatterns: patternsResult.data || null,
@@ -60,11 +60,11 @@ export async function GET(request: NextRequest) {
 
     const monitoringStatePayload = {
       user_id: session.user_id,
-      state_date: monitoring.mission_date,
-      vulnerability: monitoring.vulnerability,
-      risk_percent: monitoring.risk_percent,
-      pattern_label: monitoring.pattern_label,
-      mission_key: monitoring.mission_key,
+      state_date: initialMonitoring.mission_date,
+      vulnerability: initialMonitoring.vulnerability,
+      risk_percent: initialMonitoring.risk_percent,
+      pattern_label: initialMonitoring.pattern_label,
+      mission_key: initialMonitoring.mission_key,
     };
 
     const monitoringStateResult = await supabase
@@ -82,15 +82,32 @@ export async function GET(request: NextRequest) {
 
     const currentMonitoringState = monitoringStateResult.data as MonitoringDailyState | null;
     const monitoringHistory = (monitoringHistoryResult.data || []) as MonitoringDailyState[];
+    const journeyDay = Math.min(7, Math.max(1, monitoringHistory.length));
+    const monitoring = buildMonitoringSnapshot({
+      streak: streakResult.data || null,
+      relapses: relapsesResult.data || [],
+      triggerPatterns: patternsResult.data || null,
+      quizResult: quizResult.data || null,
+      userCreatedAt: userResult.data?.created_at || null,
+      journeyDayOverride: journeyDay,
+      recentSimulatorUsageCount: recentSimulatorResult.count || 0,
+      recentJournalUsageCount: recentJournalResult.count || 0,
+      now,
+    });
+    const streakSeconds = getStreakSecondsFromStartedAt(streakResult.data?.started_at || null, now);
+    const syncedMedals = await syncMedalsForUser(
+      session.user_id,
+      streakSeconds,
+      (medalsResult.data || []) as []
+    );
 
     return NextResponse.json({
       viewerId: session.user_id,
       streak: streakResult.data || null,
-      medals: medalsResult.data || [],
+      medals: syncedMedals,
       relapses: relapsesResult.data || [],
       triggerPatterns: patternsResult.data || null,
       quizResult: quizResult.data || null,
-      lastQuizAt,
       monitoring,
       missionCompletedAt: currentMonitoringState?.mission_completed_at || null,
       monitoringHistory,

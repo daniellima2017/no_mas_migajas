@@ -6,9 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   RefreshCw,
   AlertTriangle,
-  ClipboardList,
-  Lock,
-  Clock,
   ChevronDown,
   ArrowRight,
   ShieldAlert,
@@ -51,25 +48,9 @@ interface DashboardData {
   relapses: Relapse[];
   triggerPatterns: TriggerPatterns | null;
   quizResult: QuizResult | null;
-  lastQuizAt: string | null;
   monitoring: MonitoringSnapshot;
   missionCompletedAt: string | null;
   monitoringHistory: MonitoringDailyState[];
-}
-
-const QUIZ_COOLDOWN_MS = 24 * 60 * 60 * 1000;
-
-function getQuizCooldownRemaining(lastQuizAt: string | null): number {
-  if (!lastQuizAt) return 0;
-  const elapsed = Date.now() - new Date(lastQuizAt).getTime();
-  return Math.max(0, QUIZ_COOLDOWN_MS - elapsed);
-}
-
-function formatCooldown(ms: number): string {
-  const hours = Math.floor(ms / (1000 * 60 * 60));
-  const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-  if (hours > 0) return `${hours}h ${minutes}m`;
-  return `${minutes}m`;
 }
 
 export function DashboardClient() {
@@ -79,7 +60,6 @@ export function DashboardClient() {
   const [error, setError] = useState<string | null>(null);
   const [toastError, setToastError] = useState<string | null>(null);
   const [showResetModal, setShowResetModal] = useState(false);
-  const [quizCooldown, setQuizCooldown] = useState(0);
   const [showScrollHint, setShowScrollHint] = useState(true);
   const [missionCompletedAt, setMissionCompletedAt] = useState<string | null>(null);
   const [missionJustCompleted, setMissionJustCompleted] = useState(false);
@@ -103,14 +83,6 @@ export function DashboardClient() {
   useEffect(() => {
     fetchDashboard();
   }, [fetchDashboard]);
-
-  useEffect(() => {
-    if (!data?.lastQuizAt) return;
-    const update = () => setQuizCooldown(getQuizCooldownRemaining(data.lastQuizAt));
-    update();
-    const interval = setInterval(update, 60_000);
-    return () => clearInterval(interval);
-  }, [data?.lastQuizAt]);
 
   useEffect(() => {
     setMissionCompletedAt(data?.missionCompletedAt || null);
@@ -588,7 +560,7 @@ export function DashboardClient() {
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           <ScoreCard quizResult={data?.quizResult ?? null} />
-          <NextMedalCard streakSeconds={streakSeconds} />
+          <NextMedalCard streakSeconds={streakSeconds} medals={data?.medals ?? []} />
         </motion.section>
 
         <motion.section
@@ -684,34 +656,17 @@ export function DashboardClient() {
             </div>
           </div>
 
-          {quizCooldown > 0 ? (
-            <div
-              className="flex items-center gap-2.5 px-5 py-3 rounded-2xl text-sm font-medium"
-              style={{
-                background: "rgba(255, 255, 255, 0.03)",
-                border: "1px solid rgba(255, 255, 255, 0.06)",
-              }}
-            >
-              <Lock className="w-4 h-4 text-zinc-600" />
-              <span className="text-zinc-500">Rehacer cuestionario</span>
-              <span className="flex items-center gap-1 text-xs text-zinc-600">
-                <Clock className="w-3 h-3" />
-                {formatCooldown(quizCooldown)}
-              </span>
-            </div>
-          ) : (
-            <button
-              onClick={() => router.push("/quiz?retake")}
-              className="flex items-center justify-center gap-2.5 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-300"
-              style={{
-                background: "rgba(212, 175, 55, 0.06)",
-                border: "1px solid rgba(212, 175, 55, 0.2)",
-              }}
-            >
-              <ClipboardList className="w-4 h-4 text-accent-gold" />
-              <span className="text-accent-gold">Rehacer cuestionario</span>
-            </button>
-          )}
+          <button
+            onClick={() => router.push("/progress")}
+            className="flex items-center justify-center gap-2.5 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-300"
+            style={{
+              background: "rgba(212, 175, 55, 0.06)",
+              border: "1px solid rgba(212, 175, 55, 0.2)",
+            }}
+          >
+            <TrendingUp className="w-4 h-4 text-accent-gold" />
+            <span className="text-accent-gold">Ver progreso y patrones</span>
+          </button>
         </motion.section>
       </div>
 
@@ -763,8 +718,8 @@ export function DashboardClient() {
           },
           {
             icon: <BarChart3 className="w-7 h-7 text-accent-gold" />,
-            title: "Tu Puntuacion",
-            description: "Tu score refleja tu nivel de dependencia emocional. Rehaz el cuestionario cada 24 horas para ver tu progreso real.",
+            title: "Tu Diagnostico Base",
+            description: "Tu indice sigue disponible para darte contexto, pero el centro del app ahora es el monitoreo diario y como respondes hoy.",
           },
           {
             icon: <Trophy className="w-7 h-7 text-accent-gold" />,
